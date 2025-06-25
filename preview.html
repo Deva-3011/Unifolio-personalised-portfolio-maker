@@ -47,7 +47,9 @@
   <div class="container">
     <h1>Preview Your Portfolio</h1>
     <iframe id="templateFrame"></iframe>
-    <div id="hiddenContainer" style="display: none;"></div>
+    <!-- Hidden printable container -->
+<div id="printArea" style="display:none;"></div>
+
     <div class="btns">
       <button class="download-btn" onclick="downloadPDF()">Generate Portfolio</button>
       <button class="edit-btn" onclick="window.location.href='portfolio-form.html'">Edit Portfolio</button>
@@ -107,35 +109,32 @@
         alert("Something went wrong while loading preview.");
       }
     });
-
+//Improved preview and styling
   function downloadPDF() {
   const iframe = document.getElementById("templateFrame");
-  const iframeDoc = iframe.contentDocument || iframe.contentWindow.document;
+  const iframeDocument = iframe.contentDocument || iframe.contentWindow.document;
 
-  if (!iframeDoc || !iframeDoc.body) {
-    alert("Portfolio not ready. Please wait for it to load.");
+  if (!iframeDocument || !iframeDocument.body) {
+    alert("Preview not ready. Please wait.");
     return;
   }
 
-  // Clone the full iframe content
-  const cloned = iframeDoc.documentElement.cloneNode(true);
+  const contentClone = iframeDocument.body.cloneNode(true);
 
-  // Inject into hiddenContainer
-  const container = document.getElementById("hiddenContainer");
-  container.innerHTML = ""; // Clear previous
-  container.appendChild(cloned);
+  const printArea = document.getElementById("printArea");
+  printArea.innerHTML = "";
+  printArea.appendChild(contentClone);
 
-  // Apply inline styles for better rendering
-  html2pdf().from(container).set({
-    margin: 0.5,
-    filename: 'Unifolio-Portfolio.pdf',
+  printArea.style.display = "block"; // Show for capture
+
+  html2pdf().from(printArea).set({
+    margin: 0,
+    filename: "Unifolio-Portfolio.pdf",
     html2canvas: { scale: 2, useCORS: true },
-    jsPDF: { unit: 'in', format: 'letter', orientation: 'portrait' }
+    jsPDF: { unit: "in", format: "letter", orientation: "portrait" }
   }).save().then(() => {
-    window.location.href = "feedback.html"; // Redirect after download
-  }).catch((error) => {
-    console.error("PDF generation failed:", error);
-    alert("Failed to generate PDF.");
+    printArea.style.display = "none"; // Hide again after saving
+    window.location.href = "feedback.html"; // Go to feedback page
   });
 }
 
