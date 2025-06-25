@@ -144,7 +144,7 @@ auth.onAuthStateChanged(async (user) => {
     try {
       const docRef = db.collection("users").doc(user.uid);
       const docSnap = await docRef.get();
-
+//Updated form field instructions for better UX
       if (docSnap.exists) {
         const data = docSnap.data();
         document.getElementById("userName").innerText = data.name || "No Name";
