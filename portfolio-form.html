@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Unifolio - Portfolio Form</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      display: flex;
+      height: 100vh;
+      background: #f9f9f9;
+    }
+    .sidebar {
+      width: 260px;
+      background-color: #1e1e2f;
+      color: white;
+      padding: 20px;
+      display: flex;
+      flex-direction: column;
+    }
+    .sidebar h2 { font-size: 22px; margin-bottom: 20px; }
+    .user-info { margin-bottom: 30px; border-bottom: 1px solid gray; padding-bottom: 15px; }
+    .user-info div { margin: 5px 0; }
+    .sidebar a {
+      color: white;
+      text-decoration: none;
+      margin: 10px 0;
+      display: block;
+      padding: 10px;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+    .sidebar a:hover { background-color: #33334d; }
+    .sidebar a.active { background-color: #007bff; }
+    .content {
+      flex: 1;
+      padding: 30px;
+      overflow-y: auto;
+      background-color: white;
+      box-shadow: inset 0 0 8px #ccc;
+      border-radius: 6px;
+      margin: 15px;
+    }
+    form { max-width: 700px; }
+    label { display: block; margin-top: 15px; font-weight: bold; }
+    input, textarea {
+      width: 100%; padding: 8px; margin-top: 5px;
+      box-sizing: border-box; border-radius: 4px; border: 1px solid #ccc;
+    }
+    .submit-btn {
+      margin-top: 20px;
+      padding: 12px 25px;
+      background-color: #007bff;
+      color: white;
+      border: none;
+      border-radius: 7px;
+      cursor: pointer;
+      font-size: 16px;
+    }
+    .submit-btn:hover { background-color: #0056b3; }
+  </style>
+</head>
+<body>
+  <div class="sidebar">
+    <h2>Unifolio</h2>
+    <div class="user-info">
+      <div><strong>Name:</strong> <span id="userName">Loading...</span></div>
+      <div><strong>Email:</strong> <span id="userEmail">Loading...</span></div>
+      <div><strong>Profession:</strong> <span id="userProfession">Loading...</span></div>
+    </div>
+    <a onclick="confirmNavigation('home.html')">Home</a>
+    <a class="active">Portfolio Form</a>
+    <a onclick="confirmNavigation('profession.html')">Change Profession</a>
+    <a onclick="confirmNavigation('template.html')">Change Template</a>
+    <a onclick="launchConfidenceBooster()">Confidence Booster</a>
+    <a onclick="confirmNavigation('index.html')">Logout</a>
+  </div>
+
+  <div class="content">
+    <h1>Portfolio Form</h1>
+    <form id="portfolioForm">
+      <h3>1. Personal Information</h3>
+      <label>Full Name</label><input type="text" id="fullName">
+      <label>Phone Number</label><input type="text" id="phone">
+      <label>Date of Birth</label><input type="date" id="dob">
+      <label>Address</label><input type="text" id="address">
+      <label>LinkedIn URL</label><input type="url" id="linkedin">
+      <label>GitHub URL</label><input type="url" id="github">
+      <label>Portfolio URL</label><input type="url" id="portfolioUrl">
+
+      <h3>2. About</h3>
+      <label>Short Bio / Summary</label><textarea id="about" rows="4"></textarea>
+
+      <h3>3. Education</h3>
+      <div id="educationList"></div>
+      <button type="button" onclick="addEducation()">+ Add Education</button>
+
+      <h3>4. Skills</h3>
+      <label>Skills (comma-separated)</label><input type="text" id="skills">
+
+      <h3>5. Projects</h3>
+      <div id="projectList"></div>
+      <button type="button" onclick="addProject()">+ Add Project</button>
+
+      <h3>6. Certifications</h3>
+      <div id="certList"></div>
+      <button type="button" onclick="addCertification()">+ Add Certification</button>
+
+      <h3>7. Achievements</h3>
+      <label>Achievement Title</label><input type="text" id="achievementTitle">
+      <label>Description</label><textarea id="achievementDesc" rows="2"></textarea>
+
+      <h3>8. Contact</h3>
+      <label>Alternate Email</label><input type="email" id="alternateEmail">
+      <label>Contact Message / Support Email</label><textarea id="supportMessage" rows="2"></textarea>
+
+      <button type="submit" class="submit-btn">Save Portfolio</button>
+      <button type="button" class="submit-btn" style="margin-left: 10px;" onclick="previewPortfolio()">Preview</button>
+    </form>
+  </div>
+
+<script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-firestore-compat.js"></script>
+
+<script>
+const firebaseConfig = {
+  apiKey: "AIzaSyDPfS19D8W3FzD6VMjryjvkChUEDTvAnhA",
+  authDomain: "developer-intern.firebaseapp.com",
+  projectId: "developer-intern",
+};
+
+firebase.initializeApp(firebaseConfig);
+const auth = firebase.auth();
+const db = firebase.firestore();
+
+let educationList = [], projectsList = [], certificationsList = [], currentUser = null;
+
+auth.onAuthStateChanged(async (user) => {
+  if (user) {
+    currentUser = user;
+    try {
+      const docRef = db.collection("users").doc(user.uid);
+      const docSnap = await docRef.get();
+
+      if (docSnap.exists) {
+        const data = docSnap.data();
+        document.getElementById("userName").innerText = data.name || "No Name";
+        document.getElementById("fullName").value = data.name || "";
+        document.getElementById("userEmail").innerText = user.email;
+        document.getElementById("userProfession").innerText = data.profession || "Not Set";
+      }
+    } catch (error) {
+      console.error("Error fetching user info:", error);
+    }
+  } else {
+    window.location.href = "index.html";
+  }
+});
+
+function confirmNavigation(url) {
+  if (confirm("Are you sure you want to leave this page? Unsaved changes may be lost.")) {
+    window.location.href = url;
+  }
+}
+
+function addEducation() {
+  const degree = prompt("Enter Degree Name:");
+  const institution = prompt("Enter Institution:");
+  const start = prompt("Start Year:");
+  const end = prompt("End Year:");
+  if (degree && institution) {
+    educationList.push({ degree, institution, start, end });
+    document.getElementById("educationList").innerHTML += `<p>${degree} at ${institution} (${start} - ${end})</p>`;
+  }
+}
+
+function addProject() {
+  const title = prompt("Enter Project Title:");
+  const desc = prompt("Enter Description:");
+  const stack = prompt("Enter Tech Stack:");
+  const link = prompt("GitHub or Demo URL:");
+  if (title && desc) {
+    projectsList.push({ title, desc, stack, link });
+    document.getElementById("projectList").innerHTML += `<p>${title} - ${desc}</p>`;
+  }
+}
+
+function addCertification() {
+  const name = prompt("Enter Certificate Name:");
+  const org = prompt("Issuing Organization:");
+  const year = prompt("Year of Completion:");
+  if (name && org) {
+    certificationsList.push({ name, org, year });
+    document.getElementById("certList").innerHTML += `<p>${name} by ${org} (${year})</p>`;
+  }
+}
+
+function launchConfidenceBooster() {
+  if (confirm("Need a boost? Let's goo!🚀🔥")) {
+    window.location.href = "confidence.html";
+  }
+}
+
+document.getElementById("portfolioForm").addEventListener("submit", async (e) => {
+  e.preventDefault();
+  if (!currentUser) {
+    alert("User not authenticated!");
+    return;
+  }
+
+  const portfolioData = {
+    fullName: document.getElementById("fullName").value,
+    phone: document.getElementById("phone").value,
+    dob: document.getElementById("dob").value,
+    address: document.getElementById("address").value,
+    linkedin: document.getElementById("linkedin").value,
+    github: document.getElementById("github").value,
+    portfolioUrl: document.getElementById("portfolioUrl").value,
+    about: document.getElementById("about").value,
+    education: educationList,
+    skills: document.getElementById("skills").value.split(",").map(s => s.trim()),
+    projects: projectsList,
+    certifications: certificationsList,
+    achievements: [{
+      title: document.getElementById("achievementTitle").value,
+      description: document.getElementById("achievementDesc").value
+    }],
+    alternateEmail: document.getElementById("alternateEmail").value,
+    contactMessage: document.getElementById("supportMessage").value
+  };
+
+  try {
+    const response = await fetch("http://localhost:3000/api/portfolio/save", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ uid: currentUser.uid, portfolioData }),
+    });
+
+    if (response.ok) {
+      alert("Portfolio submitted successfully!");
+      window.location.href = "preview.html";
+    } else {
+      const err = await response.json();
+      alert("Submission failed: " + err.message);
+    }
+  } catch (error) {
+    console.error("Error:", error);
+    alert("Something went wrong while submitting portfolio.");
+  }
+});
+
+function previewPortfolio() {
+  alert("Preview is not implemented yet. You’ll be redirected to preview.html");
+  window.location.href = "preview.html";
+}
+</script>
+</body>
+</html>

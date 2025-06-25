@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Portfolio Template 1 - Clean Minimal</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      margin: 0; padding: 40px; background: #fefefe; color: #222;
+    }
+    header {
+      text-align: center;
+      margin-bottom: 40px;
+    }
+    header h1 {
+      font-weight: 700;
+      font-size: 3em;
+      margin-bottom: 5px;
+    }
+    header p {
+      font-style: italic;
+      color: #555;
+    }
+    section {
+      max-width: 900px;
+      margin: 0 auto 40px;
+    }
+    h2 {
+      border-bottom: 2px solid #007bff;
+      padding-bottom: 5px;
+      margin-bottom: 15px;
+      color: #007bff;
+    }
+    ul {
+      list-style: none;
+      padding-left: 0;
+    }
+    ul li {
+      margin-bottom: 8px;
+    }
+    .projects {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 20px;
+    }
+    .project, .certificate, .achievement, .education-item {
+      border: 1px solid #ddd;
+      padding: 15px;
+      border-radius: 8px;
+      background: #fff;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+      margin-bottom: 15px;
+    }
+    .project h3, .certificate h3, .achievement h3, .education-item h3 {
+      margin-top: 0;
+      margin-bottom: 10px;
+    }
+    .project p, .certificate p, .achievement p, .education-item p {
+      font-size: 0.9em;
+      color: #555;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1 id="fullName">Full Name</h1>
+    <p id="tagline">Your profession or tagline</p>
+  </header>
+
+  <section>
+    <h2>Personal Information</h2>
+    <p><strong>Email:</strong> <span id="email"></span></p>
+    <p><strong>Phone:</strong> <span id="phone"></span></p>
+    <p><strong>Date of Birth:</strong> <span id="dob"></span></p>
+    <p><strong>Address:</strong> <span id="address"></span></p>
+    <p><strong>LinkedIn:</strong> <span id="linkedin"></span></p>
+    <p><strong>GitHub:</strong> <span id="github"></span></p>
+    <p><strong>Portfolio:</strong> <span id="portfolio"></span></p>
+  </section>
+
+  <section>
+    <h2>About Me</h2>
+    <p id="about"></p>
+  </section>
+
+  <section>
+    <h2>Education</h2>
+    <div id="educationSection"></div>
+  </section>
+
+  <section>
+    <h2>Skills</h2>
+    <ul id="skillsList"></ul>
+  </section>
+
+  <section>
+    <h2>Projects</h2>
+    <div id="projectsSection" class="projects"></div>
+  </section>
+
+  <section>
+    <h2>Certifications</h2>
+    <div id="certificationsSection"></div>
+  </section>
+
+  <section>
+    <h2>Achievements</h2>
+    <div id="achievementsSection"></div>
+  </section>
+
+  <section>
+    <h2>Contact</h2>
+    <p><strong>Alternate Email:</strong> <span id="altEmail"></span></p>
+    <p><strong>Support / Message:</strong> <span id="supportMessage"></span></p>
+  </section>
+
+  <script>
+    
+    const data = JSON.parse(localStorage.getItem('portfolioData') || '{}');
+
+    // Top details
+    document.getElementById('fullName').textContent = data.fullName || '';
+    document.getElementById('tagline').textContent = data.about ? "Aspiring " + data.about : '';
+
+    document.getElementById('email').textContent = data.email || '';
+    document.getElementById('phone').textContent = data.phone || '';
+    document.getElementById('dob').textContent = data.dob || '';
+    document.getElementById('address').textContent = data.address || '';
+    document.getElementById('linkedin').textContent = data.linkedin || '';
+    document.getElementById('github').textContent = data.github || '';
+    document.getElementById('portfolio').textContent = data.portfolioUrl || '';
+    document.getElementById('about').textContent = data.about || '';
+    document.getElementById('altEmail').textContent = data.alternateEmail || '';
+    document.getElementById('supportMessage').textContent = data.contactMessage || '';
+
+    // Education
+    const eduSec = document.getElementById('educationSection');
+    (data.education || []).forEach(edu => {
+      const div = document.createElement('div');
+      div.className = 'education-item';
+      div.innerHTML = `
+        <h3>${edu.degree}</h3>
+        <p><strong>Institution:</strong> ${edu.institution}</p>
+        <p><strong>Start Year:</strong> ${edu.start}</p>
+        <p><strong>End Year:</strong> ${edu.end}</p>`;
+      eduSec.appendChild(div);
+    });
+
+    // Skills
+    const skillsList = document.getElementById('skillsList');
+    (data.skills || []).forEach(skill => {
+      const li = document.createElement('li');
+      li.textContent = skill;
+      skillsList.appendChild(li);
+    });
+
+    // Projects
+    const projSec = document.getElementById('projectsSection');
+    (data.projects || []).forEach(proj => {
+      const div = document.createElement('div');
+      div.className = 'project';
+      div.innerHTML = `
+        <h3>${proj.title}</h3>
+        <p><strong>Description:</strong> ${proj.desc}</p>
+        <p><strong>Tech Stack:</strong> ${proj.stack}</p>
+        <p><strong>GitHub / Demo:</strong> ${proj.link}</p>`;
+      projSec.appendChild(div);
+    });
+
+    // Certifications
+    const certSec = document.getElementById('certificationsSection');
+    (data.certifications || []).forEach(cert => {
+      const div = document.createElement('div');
+      div.className = 'certificate';
+      div.innerHTML = `
+        <h3>${cert.name}</h3>
+        <p><strong>Issued By:</strong> ${cert.org}</p>
+        <p><strong>Year:</strong> ${cert.year}</p>`;
+      certSec.appendChild(div);
+    });
+
+    // Achievements
+    const achSec = document.getElementById('achievementsSection');
+    (data.achievements || []).forEach(ach => {
+      const div = document.createElement('div');
+      div.className = 'achievement';
+      div.innerHTML = `
+        <h3>${ach.title}</h3>
+        <p>${ach.description}</p>`;
+      achSec.appendChild(div);
+    });
+    
+  </script>
+</body>
+</html>

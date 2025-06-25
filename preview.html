@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Unifolio Preview</title>
+  <style>
+    body {
+      margin: 0;
+      padding: 20px;
+      font-family: 'Segoe UI', sans-serif;
+      background: #f3f3f3;
+    }
+    .container {
+      max-width: 1100px;
+      margin: auto;
+      background: white;
+      padding: 30px;
+      border-radius: 8px;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+    }
+    iframe {
+      width: 100%;
+      height: 1400px;
+      border: none;
+    }
+    .btns {
+      margin-top: 20px;
+      display: flex;
+      justify-content: center;
+      gap: 20px;
+    }
+    button {
+      padding: 12px 25px;
+      font-size: 16px;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+    }
+    .download-btn { background-color: #28a745; color: white; }
+    .edit-btn { background-color: #007bff; color: white; }
+    .download-btn:hover { background-color: #218838; }
+    .edit-btn:hover { background-color: #0056b3; }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Preview Your Portfolio</h1>
+    <iframe id="templateFrame"></iframe>
+    <div id="hiddenContainer" style="display: none;"></div>
+    <div class="btns">
+      <button class="download-btn" onclick="downloadPDF()">Generate Portfolio</button>
+      <button class="edit-btn" onclick="window.location.href='portfolio-form.html'">Edit Portfolio</button>
+    </div>
+  </div>
+
+
+  <!-- Firebase SDK -->
+  <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-firestore-compat.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+
+  <script>
+    const firebaseConfig = {
+      apiKey: "AIzaSyDPfS19D8W3FzD6VMjryjvkChUEDTvAnhA",
+      authDomain: "developer-intern.firebaseapp.com",
+      projectId: "developer-intern",
+    };
+
+    firebase.initializeApp(firebaseConfig);
+    const auth = firebase.auth();
+    const db = firebase.firestore();
+
+    // Only inject once to prevent infinite reload loop
+    let dataInjected = false;
+
+    auth.onAuthStateChanged(async (user) => {
+      if (!user) return (window.location.href = "index.html");
+
+      try {
+        const userDoc = await db.collection("users").doc(user.uid).get();
+        const portfolioDoc = await db.collection("portfolios").doc(user.uid).get();
+
+        if (!userDoc.exists || !portfolioDoc.exists) {
+          alert("Portfolio data not found!");
+          return;
+        }
+
+        const template = userDoc.data().template || "template1";
+        const data = portfolioDoc.data();
+
+        // Set iframe source
+        const iframe = document.getElementById("templateFrame");
+        iframe.src = `${template}.html`;
+
+        // Once iframe is loaded, pass the data only ONCE
+        iframe.onload = () => {
+          if (dataInjected) return;
+          iframe.contentWindow.localStorage.setItem("portfolioData", JSON.stringify(data));
+          dataInjected = true;
+          iframe.contentWindow.postMessage("renderData", "*");
+        };
+
+      } catch (err) {
+        console.error("Error loading data:", err);
+        alert("Something went wrong while loading preview.");
+      }
+    });
+
+  function downloadPDF() {
+  const iframe = document.getElementById("templateFrame");
+  const iframeDoc = iframe.contentDocument || iframe.contentWindow.document;
+
+  if (!iframeDoc || !iframeDoc.body) {
+    alert("Portfolio not ready. Please wait for it to load.");
+    return;
+  }
+
+  // Clone the full iframe content
+  const cloned = iframeDoc.documentElement.cloneNode(true);
+
+  // Inject into hiddenContainer
+  const container = document.getElementById("hiddenContainer");
+  container.innerHTML = ""; // Clear previous
+  container.appendChild(cloned);
+
+  // Apply inline styles for better rendering
+  html2pdf().from(container).set({
+    margin: 0.5,
+    filename: 'Unifolio-Portfolio.pdf',
+    html2canvas: { scale: 2, useCORS: true },
+    jsPDF: { unit: 'in', format: 'letter', orientation: 'portrait' }
+  }).save().then(() => {
+    window.location.href = "feedback.html"; // Redirect after download
+  }).catch((error) => {
+    console.error("PDF generation failed:", error);
+    alert("Failed to generate PDF.");
+  });
+}
+
+  </script>
+</body>
+</html>

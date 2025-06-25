@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Template 6 - Clean & Minimal</title>
+  <style>
+    body {
+      font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+      background: #fff;
+      color: #222;
+      margin: 0;
+      padding: 40px;
+      max-width: 800px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+    header {
+      border-bottom: 2px solid #eee;
+      padding-bottom: 15px;
+      margin-bottom: 40px;
+    }
+    h1 {
+      margin: 0;
+      font-weight: 700;
+      font-size: 2.5rem;
+    }
+    h2, h3 {
+      font-weight: 600;
+      color: #555;
+      margin-top: 0;
+    }
+    section {
+      margin-bottom: 30px;
+    }
+    ul {
+      list-style-type: none;
+      padding: 0;
+    }
+    ul li {
+      margin-bottom: 8px;
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <h1 id="headerName">Your Name</h1>
+    <h2 id="headerProfession">Your Profession</h2>
+    <p id="contactEmail"></p>
+    <p id="contactDOB"></p>
+    <p id="contactAddress"></p>
+    <p id="contactLinks"></p>
+  </header>
+
+  <section id="about"></section>
+  <section id="education"></section>
+  <section id="skills"></section>
+  <section id="projects"></section>
+  <section id="certifications"></section>
+  <section id="achievements"></section>
+  <section id="contact"></section>
+
+  <script>
+    document.addEventListener("DOMContentLoaded", () => {
+      const data = JSON.parse(localStorage.getItem("portfolioData") || "{}");
+      const p = data.personalInfo || {};
+
+      // Header
+      document.getElementById("headerName").textContent = data.fullName || "Your Name";
+      document.getElementById("headerProfession").textContent = data.profession || "Your Profession";
+      document.getElementById("contactEmail").textContent = `Email: ${data.email || ""} | Phone: ${data.phone || ""}`;
+      document.getElementById("contactDOB").textContent = `Date of Birth: ${data.dob || ""}`;
+      document.getElementById("contactAddress").textContent = `Address: ${data.address || ""}`;
+      document.getElementById("contactLinks").textContent = `GitHub: ${data.github || ""} | Portfolio: ${data.portfolioUrl || ""}`;
+
+      // About
+      document.getElementById("about").innerHTML = `
+        <h3>Summary</h3>
+        <p>${data.about || ""}</p>
+      `;
+
+      // Education
+      const eduHTML = (data.education || []).map(edu => `
+        <p><strong>${edu.degree}</strong>, ${edu.institution} (${edu.start} – ${edu.end})</p>
+      `).join("") || "<p>No education details provided.</p>";
+      document.getElementById("education").innerHTML = `<h3>Education</h3>${eduHTML}`;
+
+      // Skills
+      const skillsHTML = (data.skills || []).map(skill => `<li>${skill}</li>`).join("") || "<li>No skills listed.</li>";
+      document.getElementById("skills").innerHTML = `<h3>Skills</h3><ul>${skillsHTML}</ul>`;
+
+      // Projects
+      const projectsHTML = (data.projects || []).map(proj => `
+        <li><strong>${proj.title}</strong> – ${proj.desc}<br>
+          <strong>Tech Stack:</strong> ${proj.stack}<br>
+          <a href="${proj.link}" target="_blank">${proj.link}</a>
+        </li>
+      `).join("") || "<li>No projects listed.</li>";
+      document.getElementById("projects").innerHTML = `<h3>Projects</h3><ul>${projectsHTML}</ul>`;
+
+      // Certifications
+      const certsHTML = (data.certifications || []).map(cert => `
+        <li>${cert.name} – ${cert.org}, ${cert.year}</li>
+      `).join("") || "<li>No certifications listed.</li>";
+      document.getElementById("certifications").innerHTML = `<h3>Certifications</h3><ul>${certsHTML}</ul>`;
+
+      // Achievements
+      const achievementsHTML = (data.achievements || []).map(ach => `
+        <li>${ach.title} – ${ach.description}</li>
+      `).join("") || "<li>No achievements listed.</li>";
+      document.getElementById("achievements").innerHTML = `<h3>Achievements</h3><ul>${achievementsHTML}</ul>`;
+
+      // Contact
+      const c = data.contact || {};
+      document.getElementById("contact").innerHTML = `
+        <h3>Contact</h3>
+        <p>Alternate Email: ${data.alternateEmail || ""}</p>
+        <p>Support Message: ${data.contactMessage || ""}</p>
+      `;
+    });
+  </script>
+
+</body>
+</html>

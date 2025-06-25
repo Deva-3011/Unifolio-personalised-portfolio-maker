@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Portfolio Template 14</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: 'Helvetica', sans-serif;
+      background: #f9f9f9;
+    }
+    .intro {
+      background: #007acc;
+      color: white;
+      padding: 50px 20px;
+      text-align: center;
+    }
+    .section {
+      padding: 30px;
+      max-width: 1000px;
+      margin: auto;
+    }
+    .card {
+      background: #fff;
+      padding: 20px;
+      margin-top: 20px;
+      border-radius: 12px;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    }
+    ul {
+      padding-left: 20px;
+    }
+    li {
+      margin-bottom: 6px;
+    }
+    .contact p {
+      margin: 5px 0;
+    }
+  </style>
+</head>
+<body>
+  <div class="intro">
+    <h1 id="name">Devendiran AP</h1>
+    <p id="profession">Software Engineer</p>
+    <p id="email-phone">Email: devendiran.ap@example.com | Phone: 987-654-3210</p>
+    <p id="links">LinkedIn: linkedin.com/in/devendiranap | GitHub: github.com/devendiranap</p>
+  </div>
+
+  <div class="section">
+    <div class="card" id="about"></div>
+    <div class="card" id="education"></div>
+    <div class="card" id="skills"></div>
+    <div class="card" id="projects"></div>
+    <div class="card" id="certifications"></div>
+    <div class="card" id="achievements"></div>
+    <div class="card contact" id="contact"></div>
+  </div>
+
+  <script>
+    document.addEventListener("DOMContentLoaded", () => {
+      const data = JSON.parse(localStorage.getItem("portfolioData"));
+      if (!data) return;
+
+      // Header Info
+      document.getElementById("name").textContent = data.fullName || "Your Name";
+      document.getElementById("profession").textContent = data.profession || "Your Profession";
+      document.getElementById("email-phone").textContent = `Email: ${data.email} | Phone: ${data.phone}`;
+      document.getElementById("links").textContent = `LinkedIn: ${data.linkedin} | GitHub: ${data.github}`;
+
+      // About
+      document.getElementById("about").innerHTML = `
+        <h2>About Me</h2>
+        <p>${data.about}</p>
+      `;
+
+      // Education
+      const eduHTML = data.education?.map(edu => `
+        <li><strong>${edu.degree}</strong> – ${edu.institution} (${edu.start}–${edu.end})</li>
+      `).join("") || "";
+      document.getElementById("education").innerHTML = `
+        <h2>Education</h2>
+        <ul>${eduHTML}</ul>
+      `;
+
+      // Skills
+      const skillsHTML = data.skills?.map(skill => `<li>${skill}</li>`).join("") || "";
+      document.getElementById("skills").innerHTML = `
+        <h2>Skills</h2>
+        <ul>${skillsHTML}</ul>
+      `;
+
+      // Projects
+      const projectsHTML = data.projects?.map(proj => `
+        <li><strong>${proj.title}:</strong> ${proj.desc} [${proj.stack}]</li>
+      `).join("") || "";
+      document.getElementById("projects").innerHTML = `
+        <h2>Projects</h2>
+        <ul>${projectsHTML}</ul>
+      `;
+
+      // Certifications
+      const certsHTML = data.certifications?.map(cert => `
+        <li>${cert.name} – ${cert.org} (${cert.year})</li>
+      `).join("") || "";
+      document.getElementById("certifications").innerHTML = `
+        <h2>Certifications</h2>
+        <ul>${certsHTML}</ul>
+      `;
+
+      // Achievements
+      const achievementsHTML = data.achievements?.map(ach => `
+        <li><strong>${ach.title}:</strong> ${ach.description}</li>
+      `).join("") || "";
+      document.getElementById("achievements").innerHTML = `
+        <h2>Achievements</h2>
+        <ul>${achievementsHTML}</ul>
+      `;
+
+      // Contact
+      document.getElementById("contact").innerHTML = `
+        <h2>Contact</h2>
+        <p><strong>Alternate Email:</strong> ${data.alternateEmail}</p>
+        <p><strong>Message:</strong> ${data.contactMessage}</p>
+      `;
+    });
+  </script>
+</body>
+</html>

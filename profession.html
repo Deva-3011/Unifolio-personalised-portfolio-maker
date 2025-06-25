@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Select Profession - Unifolio</title>
+  <link rel="stylesheet" href="style.css" />
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      text-align: center;
+      padding: 30px;
+      background: #f3f3f3;
+    }
+
+    h2 {
+      margin-bottom: 20px;
+    }
+
+    .card-container {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 20px;
+    }
+
+    .card {
+      background: #fff;
+      border: 2px solid #ccc;
+      padding: 20px 30px;
+      border-radius: 10px;
+      cursor: pointer;
+      transition: 0.3s ease;
+      width: 160px;
+      user-select: none;
+    }
+
+    .card:hover {
+      border-color: #007bff;
+      background-color: #eaf4ff;
+    }
+
+    #otherInputSection, #proceedSection {
+      margin-top: 20px;
+      display: none;
+    }
+
+    input[type="text"] {
+      padding: 8px;
+      width: 250px;
+      border: 1px solid #ccc;
+      border-radius: 6px;
+      font-size: 16px;
+    }
+
+    .btn {
+      margin-top: 15px;
+      padding: 10px 20px;
+      background-color: #007bff;
+      color: #fff;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 16px;
+    }
+
+    .btn:hover {
+      background-color: #0056b3;
+    }
+  </style>
+</head>
+<body>
+
+  <h2>Select Your Profession</h2>
+  
+  <div class="card-container" id="professionCards">
+    <div class="card" onclick="selectProfession('Student')">🎓 Student</div>
+    <div class="card" onclick="selectProfession('Developer')">💻 Developer</div>
+    <div class="card" onclick="selectProfession('Freelancer')">🧑‍💼 Freelancer</div>
+    <div class="card" onclick="selectProfession('Designer')">🎨 Designer</div>
+    <div class="card" onclick="selectProfession('Data Analyst')">📊 Data Analyst</div>
+    <div class="card" onclick="selectProfession('Photographer')">📷 Photographer</div>
+    <div class="card" onclick="selectProfession('Educator')">👨‍🏫 Educator</div>
+    <div class="card" onclick="selectProfession('Researcher')">🧪 Researcher</div>
+    <div class="card" onclick="selectProfession('Engineer')">🛠️ Engineer</div>
+    <div class="card" onclick="selectProfession('Product Manager')">📦 Product Manager</div>
+    <div class="card" onclick="selectProfession('Content Creator')">✍️ Content Creator</div>
+    <div class="card" onclick="selectProfession('Marketing Specialist')">📈 Marketing Specialist</div>
+    <div class="card" onclick="selectProfession('Sales Executive')">💼 Sales Executive</div>
+    <div class="card" onclick="selectProfession('Consultant')">🧑‍💼 Consultant</div>
+    <div class="card" onclick="selectProfession('Healthcare Professional')">🏥 Healthcare Professional</div>
+    <div class="card" onclick="selectProfession('Writer')">📝 Writer</div>
+    <div class="card" onclick="selectProfession('Musician')">🎵 Musician</div>
+    <div class="card" onclick="selectProfession('Animator')">🎬 Animator</div>
+    <div class="card" onclick="selectProfession('Architect')">🏛️ Architect</div>
+    <div class="card" onclick="selectProfession('Chef')">👨‍🍳 Chef</div>
+    <div class="card" onclick="selectProfession('Lawyer')">⚖️ Lawyer</div>
+    <div class="card" onclick="selectProfession('Scientist')">🔬 Scientist</div>
+    <div class="card" onclick="selectProfession('Accountant')">📊 Accountant</div>
+    <div class="card" onclick="selectProfession('Teacher')">📚 Teacher</div>
+    <div class="card" onclick="showOtherInput()">➕ Other</div>
+  </div>
+
+  <div id="otherInputSection">
+    <input type="text" id="otherProfession" placeholder="Enter your profession" />
+    <br />
+    <button class="btn" onclick="saveOtherProfession()">Proceed</button>
+  </div>
+
+  <div id="proceedSection">
+    <button class="btn" onclick="goToTemplate()">Proceed</button>
+  </div>
+
+  <!-- Firebase SDKs -->
+  <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-auth.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-firestore.js"></script>
+
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/9.6.10/firebase-app.js";
+    import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/9.6.10/firebase-auth.js";
+    import { getFirestore, doc, setDoc } from "https://www.gstatic.com/firebasejs/9.6.10/firebase-firestore.js";
+
+    const firebaseConfig = {
+      apiKey: "AIzaSyDPfS19D8W3FzD6VMjryjvkChUEDTvAnhA",
+      authDomain: "developer-intern.firebaseapp.com",
+      projectId: "developer-intern",
+      storageBucket: "developer-intern.appspot.com",
+      messagingSenderId: "1044594038470",
+      appId: "1:1044594038470:web:7e2692440f2776cee0e9c7"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+    const db = getFirestore(app);
+
+    let currentUser = null;
+    let selectedProfession = "";
+
+    onAuthStateChanged(auth, (user) => {
+      if (user) {
+        currentUser = user;
+      } else {
+        alert("You must be logged in to continue.");
+        window.location.href = "login.html";
+      }
+    });
+
+    window.selectProfession = function(profession) {
+      selectedProfession = profession;
+      document.getElementById("proceedSection").style.display = "block";
+      document.getElementById("otherInputSection").style.display = "none";
+    };
+
+  window.goToTemplate = function() {
+  if (!currentUser) {
+    alert("User not logged in!");
+    console.log("No current user.");
+    return;
+  }
+  if (selectedProfession === "") {
+    alert("Please select a profession first.");
+    console.log("No profession selected.");
+    return;
+  }
+  console.log("Saving profession:", selectedProfession);
+  const userRef = doc(db, "users", currentUser.uid);
+  setDoc(userRef, { profession: selectedProfession }, { merge: true })
+    .then(() => {
+      alert("Redirecting to template page...");
+      console.log("Profession saved successfully, redirecting...");
+      window.location.href = "template.html";
+    })
+    .catch((error) => {
+      alert("Error saving profession: " + error.message);
+      console.error("Error saving profession:", error);
+    });
+};
+
+
+    window.showOtherInput = function() {
+      document.getElementById("otherInputSection").style.display = "block";
+      document.getElementById("proceedSection").style.display = "none";
+      selectedProfession = "";
+    };
+
+    window.saveOtherProfession = function() {
+      const input = document.getElementById("otherProfession").value.trim();
+      if (input === "") {
+        alert("Please enter your profession");
+        return;
+      }
+      selectedProfession = input;
+      goToTemplate();
+    };
+  </script>
+</body>
+</html>

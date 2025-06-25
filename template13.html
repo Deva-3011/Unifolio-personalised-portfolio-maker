@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Portfolio Template 13</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #f2f2f2;
+      padding: 0;
+      margin: 0;
+    }
+    .banner {
+      background: #333;
+      color: #fff;
+      padding: 60px;
+      text-align: center;
+    }
+    .content {
+      padding: 30px;
+      max-width: 1000px;
+      margin: auto;
+      background: #fff;
+      margin-top: -20px;
+      border-radius: 10px;
+    }
+    h2 {
+      border-bottom: 2px solid #ccc;
+      padding-bottom: 8px;
+      margin-top: 40px;
+    }
+    .row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 20px;
+    }
+    .col {
+      flex: 1 1 45%;
+      background: #e9ecef;
+      padding: 20px;
+      border-radius: 10px;
+    }
+    ul {
+      padding-left: 20px;
+    }
+    li {
+      margin-bottom: 6px;
+    }
+  </style>
+</head>
+<body>
+  <div class="banner">
+    <h1 id="name">Devendiran AP</h1>
+    <p id="profession">Frontend Developer & Tech Enthusiast</p>
+    <p id="email-phone">Email: devendiran.ap@example.com | Phone: 987-654-3210</p>
+    <p id="links">LinkedIn: linkedin.com/in/devendiranap | GitHub: github.com/devendiranap</p>
+  </div>
+
+  <div class="content">
+    <div id="about"></div>
+    <div id="education"></div>
+    
+    <div class="row">
+      <div class="col" id="skills"></div>
+      <div class="col" id="certifications"></div>
+    </div>
+
+    <div id="projects"></div>
+    <div id="achievements"></div>
+    <div id="contact"></div>
+  </div>
+
+  <script>
+    document.addEventListener("DOMContentLoaded", () => {
+      const data = JSON.parse(localStorage.getItem("portfolioData"));
+      if (!data) return;
+
+      // Header
+      document.getElementById("name").textContent = data.fullName || "Your Name";
+      document.getElementById("profession").textContent = data.profession || "Your Profession";
+      document.getElementById("email-phone").textContent = `Email: ${data.email} | Phone: ${data.phone}`;
+      document.getElementById("links").textContent = `LinkedIn: ${data.linkedin} | GitHub: ${data.github}`;
+
+      // About
+      document.getElementById("about").innerHTML = `
+        <h2>About Me</h2>
+        <p>${data.about}</p>
+      `;
+
+      // Education
+      const eduHTML = data.education?.map(edu => `
+        <li><strong>${edu.degree}</strong> – ${edu.institution} (${edu.start}–${edu.end})</li>
+      `).join("") || "";
+      document.getElementById("education").innerHTML = `
+        <h2>Education</h2>
+        <ul>${eduHTML}</ul>
+      `;
+
+      // Skills
+      const skillsHTML = data.skills?.map(skill => `<li>${skill}</li>`).join("") || "";
+      document.getElementById("skills").innerHTML = `
+        <h3>Skills</h3>
+        <ul>${skillsHTML}</ul>
+      `;
+
+      // Certifications
+      const certsHTML = data.certifications?.map(cert => `
+        <li>${cert.name} – ${cert.org} (${cert.year})</li>
+      `).join("") || "";
+      document.getElementById("certifications").innerHTML = `
+        <h3>Certifications</h3>
+        <ul>${certsHTML}</ul>
+      `;
+
+      // Projects
+      const projectsHTML = data.projects?.map(proj => `
+        <li><strong>${proj.title}</strong> – ${proj.desc} [${proj.stack}]</li>
+      `).join("") || "";
+      document.getElementById("projects").innerHTML = `
+        <h2>Projects</h2>
+        <ul>${projectsHTML}</ul>
+      `;
+
+      // Achievements
+      const achievementsHTML = data.achievements?.map(ach => `
+        <li><strong>${ach.title}</strong> – ${ach.description}</li>
+      `).join("") || "";
+      document.getElementById("achievements").innerHTML = `
+        <h2>Achievements</h2>
+        <ul>${achievementsHTML}</ul>
+      `;
+
+      // Contact
+      document.getElementById("contact").innerHTML = `
+        <h2>Contact</h2>
+        <p><strong>Alternate Email:</strong> ${data.alternateEmail}</p>
+        <p><strong>Message:</strong> ${data.contactMessage}</p>
+      `;
+    });
+  </script>
+</body>
+</html>

@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Portfolio Template 5 - Professional Classic</title>
+  <style>
+    body {
+      font-family: Georgia, serif;
+      margin: 0;
+      background: #fefefe;
+      color: #333;
+      padding: 50px 100px;
+    }
+    header {
+      border-bottom: 2px solid #222;
+      padding-bottom: 15px;
+      margin-bottom: 40px;
+    }
+    header h1 {
+      margin: 0;
+      font-weight: normal;
+      font-size: 3.2rem;
+    }
+    header p {
+      font-style: italic;
+      color: #777;
+    }
+    section {
+      margin-bottom: 40px;
+    }
+    h2 {
+      border-bottom: 2px solid #222;
+      padding-bottom: 6px;
+      margin-bottom: 15px;
+    }
+    ul {
+      list-style: square inside;
+      padding-left: 0;
+    }
+    ul li {
+      margin-bottom: 8px;
+    }
+    .projects div {
+      margin-bottom: 15px;
+    }
+    .contact p {
+      margin: 5px 0;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1 id="headerName">Your Name</h1>
+    <p id="headerProfession">Your Profession</p>
+  </header>
+
+  <section id="personal"></section>
+  <section id="about"></section>
+  <section id="education"></section>
+  <section id="skills"></section>
+  <section id="projects" class="projects"></section>
+  <section id="certifications"></section>
+  <section id="achievements"></section>
+  <section id="contact" class="contact"></section>
+
+  <script>
+    document.addEventListener("DOMContentLoaded", () => {
+      const data = JSON.parse(localStorage.getItem("portfolioData") || "{}");
+
+      // Header
+      document.getElementById("headerName").textContent = data.fullName || "Your Name";
+      document.getElementById("headerProfession").textContent = data.profession || "Your Profession";
+
+      // Personal Info
+      const p = data.personalInfo || {};
+     document.getElementById("personal").innerHTML = `
+        <h3>Personal Info</h3>
+        <p><strong>Email:</strong> ${data.email}</p>
+        <p><strong>Phone:</strong> ${data.phone}</p>
+        <p><strong>DOB:</strong> ${data.dob}</p>
+        <p><strong>Address:</strong> ${data.address}</p>
+        <p><strong>LinkedIn:</strong> ${data.linkedin}</p>
+        <p><strong>GitHub:</strong> ${data.github}</p>
+        <p><strong>Portfolio:</strong> ${data.portfolioUrl}</p>
+      `;
+
+      // About
+      document.getElementById("about").innerHTML = `
+        <h2>About Me</h2>
+        <p>${data.about || ""}</p>
+      `;
+
+      // Education
+      const eduHTML = (data.education || []).map(edu => `
+        <p><strong>${edu.degree}</strong></p>
+        <p>${edu.institution}, ${edu.start} – ${edu.end}</p>
+      `).join("") || "<p>No education details provided.</p>";
+      document.getElementById("education").innerHTML = `<h2>Education</h2>${eduHTML}`;
+
+      // Skills
+      const skillsHTML = (data.skills || []).map(skill => `<li>${skill}</li>`).join("") || "<li>No skills listed.</li>";
+      document.getElementById("skills").innerHTML = `<h2>Skills</h2><ul>${skillsHTML}</ul>`;
+
+      // Projects
+      const projectsHTML = (data.projects || []).map(proj => `
+        <div>
+          <strong>${proj.title}</strong>
+          <p>${proj.desc}</p>
+          <p><strong>Tech Stack:</strong> ${proj.stack}</p>
+          <p><strong>GitHub:</strong> <a href="${proj.link}" target="_blank">${proj.link}</a></p>
+        </div>
+      `).join("") || "<p>No projects to show.</p>";
+      document.getElementById("projects").innerHTML = `<h2>Projects</h2>${projectsHTML}`;
+
+      // Certifications
+      const certsHTML = (data.certifications || []).map(cert => `
+        <li>${cert.name} – ${cert.org} (${cert.year})</li>
+      `).join("") || "<li>No certifications listed.</li>";
+      document.getElementById("certifications").innerHTML = `<h2>Certifications</h2><ul>${certsHTML}</ul>`;
+
+      // Achievements
+      const achievementsHTML = (data.achievements || []).map(ach => `
+        <li>${ach.title} – ${ach.description}</li>
+      `).join("") || "<li>No achievements listed.</li>";
+      document.getElementById("achievements").innerHTML = `<h2>Achievements</h2><ul>${achievementsHTML}</ul>`;
+
+      // Contact
+      const c = data.contact || {};
+      document.getElementById("contact").innerHTML = `
+        <h2>Contact</h2>
+        <p><strong>Alternate Email:</strong> ${data.alternateEmail || ""}</p>
+        <p><strong>Message:</strong> ${data.contactMessage || ""}</p>
+      `;
+    });
+  </script>
+</body>
+</html>

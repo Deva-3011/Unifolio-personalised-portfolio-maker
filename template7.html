@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Template 7 - Dark Mode</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background-color: #121212;
+      color: #e0e0e0;
+      margin: 0;
+      padding: 40px;
+      max-width: 850px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+    header {
+      border-bottom: 2px solid #333;
+      padding-bottom: 15px;
+      margin-bottom: 40px;
+    }
+    h1 {
+      font-size: 2.8rem;
+      font-weight: 700;
+      margin: 0;
+    }
+    h2 {
+      font-weight: 500;
+      color: #bbb;
+      margin-bottom: 15px;
+    }
+    h3 {
+      margin: 0 0 10px;
+    }
+    section {
+      margin-bottom: 30px;
+    }
+    a {
+      color: #03a9f4;
+      text-decoration: none;
+    }
+    a:hover {
+      text-decoration: underline;
+    }
+    ul {
+      list-style: none;
+      padding: 0;
+    }
+    ul li {
+      margin-bottom: 8px;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1 id="headerName">Your Name</h1>
+    <h2 id="headerProfession">Your Profession</h2>
+    <p id="contactDetails1"></p>
+    <p id="contactDetails2"></p>
+    <p id="contactDetails3"></p>
+  </header>
+
+  <section id="about"></section>
+  <section id="education"></section>
+  <section id="skills"></section>
+  <section id="projects"></section>
+  <section id="certifications"></section>
+  <section id="achievements"></section>
+  <section id="contact"></section>
+
+  <script>
+    document.addEventListener("DOMContentLoaded", () => {
+      const data = JSON.parse(localStorage.getItem("portfolioData") || "{}");
+      const p = data.personalInfo || {};
+
+      // Header
+      document.getElementById("headerName").textContent = data.fullName || "Your Name";
+      document.getElementById("headerProfession").textContent = data.profession || "Your Profession";
+      document.getElementById("contactDetails1").textContent = `Email: ${data.email || ""} | Phone: ${data.phone || ""}`;
+      document.getElementById("contactDetails2").textContent = `Date of Birth: ${data.dob || ""}`;
+      document.getElementById("contactDetails3").textContent = `Address: ${data.address || ""} | LinkedIn: ${data.linkedin || ""} | GitHub: ${data.github || ""}| Portfolio: ${data.portfolioUrl || ""}`;
+
+
+      // About
+      document.getElementById("about").innerHTML = `
+        <h3>About Me</h3>
+        <p>${data.about || ""}</p>
+      `;
+
+      // Education
+      const eduHTML = (data.education || []).map(edu => `
+        <p><strong>${edu.degree}</strong>, ${edu.institution} (${edu.start} – ${edu.end})</p>
+      `).join("") || "<p>No education listed.</p>";
+      document.getElementById("education").innerHTML = `<h3>Education</h3>${eduHTML}`;
+
+      // Skills
+      const skillsHTML = (data.skills || []).map(skill => `<li>${skill}</li>`).join("") || "<li>No skills listed.</li>";
+      document.getElementById("skills").innerHTML = `<h3>Technical Skills</h3><ul>${skillsHTML}</ul>`;
+
+      // Projects
+      const projectsHTML = (data.projects || []).map(proj => `
+        <li><strong>${proj.title}</strong> – ${proj.desc}<br>
+        <em>Stack:</em> ${proj.stack}<br>
+        <a href="${proj.link}" target="_blank">${proj.link}</a>
+        </li>
+      `).join("") || "<li>No projects listed.</li>";
+      document.getElementById("projects").innerHTML = `<h3>Projects</h3><ul>${projectsHTML}</ul>`;
+
+      // Certifications
+      const certsHTML = (data.certifications || []).map(cert => `
+        <li>${cert.name} – ${cert.org}, ${cert.year}</li>
+      `).join("") || "<li>No certifications listed.</li>";
+      document.getElementById("certifications").innerHTML = `<h3>Certifications</h3><ul>${certsHTML}</ul>`;
+
+      // Achievements
+      const achievementsHTML = (data.achievements || []).map(ach => `
+        <li>${ach.title} – ${ach.description}</li>
+      `).join("") || "<li>No achievements listed.</li>";
+      document.getElementById("achievements").innerHTML = `<h3>Achievements</h3><ul>${achievementsHTML}</ul>`;
+
+      // Contact
+      const c = data.contact || {};
+      document.getElementById("contact").innerHTML = `
+        <h3>Contact</h3>
+        <p><strong>Alternate Email:</strong> ${data.alternateEmail || ""}</p>
+        <p><strong>Message:</strong> ${data.contactMessage || ""}</p>
+      `;
+    });
+  </script>
+</body>
+</html>

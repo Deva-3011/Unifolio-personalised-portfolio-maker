@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Portfolio Template 15</title>
+  <style>
+    body { font-family: Georgia, serif; background-color: #fcfcfc; margin: 0; }
+    .top { background: #1c1c1c; color: #f2f2f2; text-align: center; padding: 50px 10px; }
+    .container { max-width: 900px; margin: 40px auto; padding: 20px; background: #fff; border-radius: 10px; }
+    h2 { color: #444; margin-top: 40px; }
+    ul { padding-left: 20px; }
+    li { margin-bottom: 8px; }
+    .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+    a { color: #1c1c1c; text-decoration: underline; }
+  </style>
+</head>
+<body>
+  <div class="top">
+    <h1 id="name">Your Name</h1>
+    <p id="profession">AI/ML Enthusiast</p>
+    <p id="contact-line-1">Email: your.email@example.com | Phone: +91-1234567890</p>
+    <p id="contact-line-2">DOB: 01 Jan 2000 | Address: Your City, Your State</p>
+    <p id="links">
+      <a href="#">LinkedIn</a> |
+      <a href="#">GitHub</a> |
+      <a href="#">Portfolio</a>
+    </p>
+  </div>
+
+  <div class="container">
+    <div id="about"></div>
+    <div id="education"></div>
+    <div id="skills"></div>
+    <div id="projects"></div>
+    <div id="certifications"></div>
+    <div id="achievements"></div>
+    <div id="contact"></div>
+  </div>
+
+  <script>
+  document.addEventListener("DOMContentLoaded", () => {
+    const data = JSON.parse(localStorage.getItem("portfolioData"));
+    if (!data) return;
+
+    // Header Info
+    document.getElementById("name").textContent = data.fullName || "Your Name";
+    document.getElementById("profession").textContent = data.profession || "Your Profession";
+    document.getElementById("contact-line-1").textContent = `Email: ${data.email} | Phone: ${data.phone}`;
+    document.getElementById("contact-line-2").textContent = `DOB: ${data.dob} | Address: ${data.address}`;
+    document.getElementById("links").innerHTML = `
+      <a href="${data.linkedin}" target="_blank">LinkedIn</a> |
+      <a href="${data.github}" target="_blank">GitHub</a> |
+      <a href="${data.portfolioUrl}" target="_blank">Portfolio</a>
+    `;
+
+    // About
+    document.getElementById("about").innerHTML = `
+      <h2>About Me</h2>
+      <p>${data.about}</p>
+    `;
+
+    // Education
+    const eduHTML = data.education?.map(edu => `
+      <li><strong>${edu.degree}</strong>, ${edu.institution} (${edu.start} – ${edu.end})</li>
+    `).join("") || "";
+    document.getElementById("education").innerHTML = `
+      <h2>Education</h2>
+      <ul>${eduHTML}</ul>
+    `;
+
+    // Skills
+    const skillsHTML = data.skills?.map(skill => `<li>${skill}</li>`).join("") || "";
+    document.getElementById("skills").innerHTML = `
+      <h2>Skills</h2>
+      <ul>${skillsHTML}</ul>
+    `;
+
+    // Projects
+    const projectsHTML = data.projects?.map(proj => `
+      <li>
+        <strong>${proj.title}</strong><br/>
+        ${proj.desc}<br/>
+        <em>Tech Stack:</em> ${proj.stack}<br/>
+        <a href="${proj.link}" target="_blank">GitHub</a> 
+        ${proj.demo ? `| <a href="${proj.link}" target="_blank">Live Demo</a>` : ""}
+      </li>
+    `).join("") || "";
+    document.getElementById("projects").innerHTML = `
+      <h2>Projects</h2>
+      <ul>${projectsHTML}</ul>
+    `;
+
+    // Certifications
+    const certsHTML = data.certifications?.map(cert => `
+      <li>${cert.name} – ${cert.org} (${cert.year})</li>
+    `).join("") || "";
+    document.getElementById("certifications").innerHTML = `
+      <h2>Certifications</h2>
+      <ul>${certsHTML}</ul>
+    `;
+
+    // Achievements
+    const achievementsHTML = data.achievements?.map(ach => `
+      <li><strong>${ach.title}</strong> – ${ach.description}</li>
+    `).join("") || "";
+    document.getElementById("achievements").innerHTML = `
+      <h2>Achievements</h2>
+      <ul>${achievementsHTML}</ul>
+    `;
+
+    // Contact
+    document.getElementById("contact").innerHTML = `
+      <h2>Contact</h2>
+      <p><strong>Alternate Email:</strong> ${data.alternateEmail}</p>
+      <p><strong>Message:</strong> ${data.contactMessage}</p>
+    `;
+  });
+  </script>
+</body>
+</html>

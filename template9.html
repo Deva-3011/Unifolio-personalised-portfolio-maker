@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Template 9 - Elegant & Professional</title>
+  <style>
+    body {
+      font-family: Georgia, 'Times New Roman', serif;
+      background-color: #fefefe;
+      color: #333;
+      margin: 0;
+      padding: 50px;
+      max-width: 750px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+    header {
+      border-bottom: 3px solid #ccc;
+      padding-bottom: 20px;
+      margin-bottom: 40px;
+    }
+    h1 {
+      font-size: 3rem;
+      margin: 0;
+      font-weight: normal;
+    }
+    h2 {
+      font-weight: 400;
+      color: #666;
+      margin-top: 5px;
+    }
+    section {
+      margin-bottom: 30px;
+    }
+    ul {
+      padding-left: 20px;
+    }
+    ul li {
+      margin-bottom: 10px;
+    }
+    strong {
+      color: #000;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1 id="name">William Turner</h1>
+    <h2 id="profession">Project Manager</h2>
+    <p id="email-phone">Email: william.turner@example.com | Phone: 777-888-9999</p>
+    <p id="address">Address: 45 Strategy Ave, New York, NY</p>
+    <p id="links">LinkedIn: linkedin.com/in/williamturner | GitHub: github.com/williamturner</p>
+  </header>
+
+  <section id="personal"></section>
+  <section id="about"></section>
+  <section id="education"></section>
+  <section id="skills"></section>
+  <section id="projects"></section>
+  <section id="certifications"></section>
+  <section id="achievements"></section>
+  <section id="contact"></section>
+
+  <script>
+  document.addEventListener("DOMContentLoaded", () => {
+    const data = JSON.parse(localStorage.getItem("portfolioData"));
+    if (!data) return;
+
+    document.querySelector("#name").textContent = data.fullName || "Your Name";
+    document.querySelector("#profession").textContent = data.profession || "Your Profession";
+    document.querySelector("#email-phone").textContent = `Email: ${data.email} | Phone: ${data.phone}`;
+    document.querySelector("#address").textContent = `Address: ${data.address}`;
+    document.querySelector("#links").textContent = `LinkedIn: ${data.linkedin} | GitHub: ${data.github}`;
+
+    document.querySelector("#personal").innerHTML = `
+      <h2>Personal Information</h2>
+      <p><strong>Email:</strong> ${data.email}</p>
+      <p><strong>Phone:</strong> ${data.phone}</p>
+      <p><strong>Date of Birth:</strong> ${data.dob}</p>
+      <p><strong>Address:</strong> ${data.address}</p>
+      <p><strong>LinkedIn:</strong> ${data.linkedin}</p>
+      <p><strong>GitHub:</strong> ${data.github}</p>
+      <p><strong>Portfolio:</strong> ${data.portfolioUrl}</p>
+    `;
+
+    document.querySelector("#about").innerHTML = `
+      <h2>About Me</h2>
+      <p>${data.about}</p>
+    `;
+
+    const eduHTML = data.education?.map(edu => `
+      <div class="education-item">
+        <h3>${edu.degree}</h3>
+        <p><strong>Institution:</strong> ${edu.institution}</p>
+        <p><strong>Start Year:</strong> ${edu.start}</p>
+        <p><strong>End Year:</strong> ${edu.end}</p>
+      </div>
+    `).join("") || "";
+    document.querySelector("#education").innerHTML = `<h2>Education</h2>${eduHTML}`;
+
+    const skillsHTML = data.skills?.map(skill => `<li>${skill}</li>`).join("") || "";
+    document.querySelector("#skills").innerHTML = `<h2>Skills</h2><ul>${skillsHTML}</ul>`;
+
+    const projectsHTML = data.projects?.map(proj => `
+      <div class="project">
+        <h3>${proj.title}</h3>
+        <p><strong>Description:</strong> ${proj.desc}</p>
+        <p><strong>Tech Stack:</strong> ${proj.stack}</p>
+        <p><strong>GitHub:</strong> <a href="${proj.link}" target="_blank">${proj.link}</a></p>
+      </div>
+    `).join("") || "";
+    document.querySelector("#projects").innerHTML = `<h2>Projects</h2>${projectsHTML}`;
+
+    const certsHTML = data.certifications?.map(cert => `
+      <div class="certificate">
+        <h3>${cert.name}</h3>
+        <p><strong>Issued By:</strong> ${cert.org}</p>
+        <p><strong>Year:</strong> ${cert.year}</p>
+      </div>
+    `).join("") || "";
+    document.querySelector("#certifications").innerHTML = `<h2>Certifications</h2>${certsHTML}`;
+
+    const achievementsHTML = data.achievements?.map(ach => `
+      <div class="achievement">
+        <h3>${ach.title}</h3>
+        <p>${ach.description}</p>
+      </div>
+    `).join("") || "";
+    document.querySelector("#achievements").innerHTML = `<h2>Achievements</h2>${achievementsHTML}`;
+
+    document.querySelector("#contact").innerHTML = `
+      <h2>Contact</h2>
+      <p><strong>Alternate Email:</strong> ${data.alternateEmail}</p>
+      <p><strong>Message:</strong> ${data.contactMessage}</p>
+    `;
+  });
+  </script>
+</body>
+</html>

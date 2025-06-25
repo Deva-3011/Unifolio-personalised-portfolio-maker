@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Template 10 - Modern & Bold</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@700&display=swap');
+    body {
+      font-family: 'Montserrat', sans-serif;
+      background-color: #121212;
+      color: #fff;
+      margin: 0;
+      padding: 60px 40px;
+      max-width: 900px;
+      margin-left: auto;
+      margin-right: auto;
+      letter-spacing: 0.03em;
+    }
+    header {
+      border-bottom: 4px solid #f72585;
+      padding-bottom: 20px;
+      margin-bottom: 45px;
+    }
+    h1 {
+      font-size: 3.5rem;
+      margin: 0;
+    }
+    h2 {
+      font-weight: 400;
+      color: #f72585;
+      margin-top: 6px;
+      font-size: 1.5rem;
+    }
+    section {
+      margin-bottom: 35px;
+    }
+    h3 {
+      color: #f72585;
+      font-size: 1.6rem;
+      margin-bottom: 10px;
+    }
+    p, ul {
+      font-weight: 300;
+      font-size: 1.15rem;
+    }
+    ul {
+      list-style-type: none;
+      padding: 0;
+    }
+    ul li {
+      margin-bottom: 10px;
+      border-left: 4px solid #f72585;
+      padding-left: 10px;
+    }
+    strong {
+      color: #fff;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1 id="name">Linda Green</h1>
+    <h2 id="profession">UX/UI Designer</h2>
+    <p id="email-phone">Email: linda.green@example.com | Phone: 456-789-1234</p>
+    <p id="address">Address: 98 Design Street, San Francisco, CA</p>
+    <p id="links">LinkedIn: linkedin.com/in/lindagreen | Portfolio: lindagreen.design</p>
+  </header>
+
+  <section id="personal"></section>
+  <section id="about"></section>
+  <section id="education"></section>
+  <section id="skills"></section>
+  <section id="projects"></section>
+  <section id="certifications"></section>
+  <section id="achievements"></section>
+  <section id="contact"></section>
+
+  <script>
+    document.addEventListener("DOMContentLoaded", () => {
+      const data = JSON.parse(localStorage.getItem("portfolioData"));
+      if (!data) return;
+
+      // Header values
+      document.querySelector("#name").textContent = data.fullName || "Your Name";
+      document.querySelector("#profession").textContent = data.profession || "Your Profession";
+      document.querySelector("#email-phone").textContent = `Email: ${data.email} | Phone: ${data.phone}`;
+      document.querySelector("#address").textContent = `Address: ${data.address}`;
+      document.querySelector("#links").textContent = `LinkedIn: ${data.linkedin} | Portfolio: ${data.portfolioUrl}`;
+
+      // Personal Info
+      document.querySelector("#personal").innerHTML = `
+        <h3>Personal Information</h3>
+        <p><strong>Email:</strong> ${data.email}</p>
+        <p><strong>Phone:</strong> ${data.phone}</p>
+        <p><strong>Date of Birth:</strong> ${data.dob}</p>
+        <p><strong>Address:</strong> ${data.address}</p>
+        <p><strong>LinkedIn:</strong> ${data.linkedin}</p>
+        <p><strong>GitHub:</strong> ${data.github}</p>
+        <p><strong>Portfolio:</strong> ${data.portfolioUrl}</p>
+      `;
+
+      // About
+      document.querySelector("#about").innerHTML = `
+        <h3>About Me</h3>
+        <p>${data.about}</p>
+      `;
+
+      // Education
+      const eduHTML = data.education?.map(edu => `
+        <div>
+          <h4>${edu.degree}</h4>
+          <p><strong>Institution:</strong> ${edu.institution}</p>
+          <p><strong>Start Year:</strong> ${edu.start}</p>
+          <p><strong>End Year:</strong> ${edu.end}</p>
+        </div>
+      `).join("") || "";
+      document.querySelector("#education").innerHTML = `<h3>Education</h3>${eduHTML}`;
+
+      // Skills
+      const skillsHTML = data.skills?.map(skill => `<li>${skill}</li>`).join("") || "";
+      document.querySelector("#skills").innerHTML = `<h3>Skills</h3><ul>${skillsHTML}</ul>`;
+
+      // Projects
+      const projectsHTML = data.projects?.map(proj => `
+        <div>
+          <h4>${proj.title}</h4>
+          <p><strong>Description:</strong> ${proj.desc}</p>
+          <p><strong>Tech Stack:</strong> ${proj.stack}</p>
+          <p><strong>GitHub:</strong> <a href="${proj.link}" target="_blank">${proj.link}</a></p>
+        </div>
+      `).join("") || "";
+      document.querySelector("#projects").innerHTML = `<h3>Projects</h3>${projectsHTML}`;
+
+      // Certifications
+      const certsHTML = data.certifications?.map(cert => `
+        <div>
+          <h4>${cert.name}</h4>
+          <p><strong>Issued By:</strong> ${cert.org}</p>
+          <p><strong>Year:</strong> ${cert.year}</p>
+        </div>
+      `).join("") || "";
+      document.querySelector("#certifications").innerHTML = `<h3>Certifications</h3>${certsHTML}`;
+
+      // Achievements
+      const achievementsHTML = data.achievements?.map(ach => `
+        <div>
+          <h4>${ach.title}</h4>
+          <p>${ach.description}</p>
+        </div>
+      `).join("") || "";
+      document.querySelector("#achievements").innerHTML = `<h3>Achievements</h3>${achievementsHTML}`;
+
+      // Contact
+      document.querySelector("#contact").innerHTML = `
+        <h3>Contact</h3>
+        <p><strong>Alternate Email:</strong> ${data.alternateEmail}</p>
+        <p><strong>Message:</strong> ${data.contactMessage}</p>
+      `;
+    });
+  </script>
+</body>
+</html>

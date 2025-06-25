@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Portfolio Template 2 - Dark Mode</title>
+<style>
+  body {
+    font-family: 'Roboto', sans-serif;
+    background: #121212;
+    color: #eee;
+    margin: 0; padding: 40px;
+  }
+  header {
+    text-align: center;
+    margin-bottom: 50px;
+  }
+  header h1 {
+    font-size: 3.5em;
+    margin: 0;
+  }
+  header p {
+    font-style: italic;
+    color: #bbb;
+  }
+  section {
+    max-width: 800px;
+    margin: auto 0 40px;
+  }
+  h2 {
+    color: #1DB954;
+    border-bottom: 2px solid #1DB954;
+    padding-bottom: 8px;
+  }
+  ul {
+    padding-left: 0;
+    list-style: none;
+  }
+  li {
+    margin-bottom: 10px;
+  }
+  .projects, .certifications, .achievements, .education {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+  }
+  .project, .certificate, .achievement, .education-item {
+    background: #222;
+    border-radius: 12px;
+    padding: 20px;
+    box-shadow: 0 0 15px #1DB954aa;
+  }
+  .project h3, .certificate h3, .achievement h3, .education-item h3 {
+    margin-top: 0;
+    color: #1DB954;
+  }
+  a {
+    color: #1DB954;
+    text-decoration: none;
+  }
+  a:hover {
+    text-decoration: underline;
+  }
+</style>
+</head>
+<body>
+  <header>
+    <h1 id="fullName">Full Name</h1>
+    <p id="tagline">Your profession or tagline</p>
+  </header>
+
+  <section>
+    <h2>Personal Information</h2>
+    <p><strong>Email:</strong> <span id="email"></span></p>
+    <p><strong>Phone:</strong> <span id="phone"></span></p>
+    <p><strong>Date of Birth:</strong> <span id="dob"></span></p>
+    <p><strong>Address:</strong> <span id="address"></span></p>
+    <p><strong>LinkedIn:</strong> <span id="linkedin"></span></p>
+    <p><strong>GitHub:</strong> <span id="github"></span></p>
+    <p><strong>Portfolio:</strong> <span id="portfolio"></span></p>
+  </section>
+
+  <section>
+    <h2>About Me</h2>
+    <p id="about"></p>
+  </section>
+
+  <section>
+    <h2>Education</h2>
+    <div id="educationSection"></div>
+  </section>
+
+  <section>
+    <h2>Skills</h2>
+    <ul id="skillsList"></ul>
+  </section>
+
+  <section>
+    <h2>Projects</h2>
+    <div id="projectsSection" class="projects"></div>
+  </section>
+
+  <section>
+    <h2>Certifications</h2>
+    <div id="certificationsSection" class="certifications"></div>
+  </section>
+
+  <section>
+    <h2>Achievements</h2>
+    <div id="achievementsSection" class="achievements"></div>
+  </section>
+
+  <section>
+    <h2>Contact</h2>
+    <p><strong>Alternate Email:</strong> <span id="altEmail"></span></p>
+    <p><strong>Support / Message:</strong> <span id="supportMessage"></span></p>
+  </section>
+
+  <script>
+    const data = JSON.parse(localStorage.getItem('portfolioData') || '{}');
+
+    document.getElementById('fullName').textContent = data.fullName || '';
+    document.getElementById('tagline').textContent = "Aspiring " + (data.about || '');
+    document.getElementById('email').textContent = data.email || '';
+    document.getElementById('phone').textContent = data.phone || '';
+    document.getElementById('dob').textContent = data.dob || '';
+    document.getElementById('address').textContent = data.address || '';
+    document.getElementById('linkedin').textContent = data.linkedin || '';
+    document.getElementById('github').textContent = data.github || '';
+    document.getElementById('portfolio').textContent = data.portfolioUrl || '';
+    document.getElementById('about').textContent = data.about || '';
+    document.getElementById('altEmail').textContent = data.alternateEmail || '';
+    document.getElementById('supportMessage').textContent = data.contactMessage || '';
+
+    // Education
+    const eduSec = document.getElementById('educationSection');
+    (data.education || []).forEach(edu => {
+      const div = document.createElement('div');
+      div.className = 'education-item';
+      div.innerHTML = `<h3>${edu.degree}</h3>
+        <p><strong>Institution:</strong> ${edu.institution}</p>
+        <p><strong>Start Year:</strong> ${edu.start}</p>
+        <p><strong>End Year:</strong> ${edu.end}</p>`;
+      eduSec.appendChild(div);
+    });
+
+    // Skills
+    const skillsList = document.getElementById('skillsList');
+    (data.skills || []).forEach(skill => {
+      const li = document.createElement('li');
+      li.textContent = skill;
+      skillsList.appendChild(li);
+    });
+
+    // Projects
+    const projSec = document.getElementById('projectsSection');
+    (data.projects || []).forEach(proj => {
+      const div = document.createElement('div');
+      div.className = 'project';
+      div.innerHTML = `<h3>${proj.title}</h3>
+        <p><strong>Description:</strong> ${proj.desc}</p>
+        <p><strong>Tech Stack:</strong> ${proj.stack}</p>
+        <p><strong>GitHub:</strong> <a href="${proj.link}" target="_blank">${proj.link}</a></p>`;
+      projSec.appendChild(div);
+    });
+
+    // Certifications
+    const certSec = document.getElementById('certificationsSection');
+    (data.certifications || []).forEach(cert => {
+      const div = document.createElement('div');
+      div.className = 'certificate';
+      div.innerHTML = `<h3>${cert.name}</h3>
+        <p><strong>Issued By:</strong> ${cert.org}</p>
+        <p><strong>Year:</strong> ${cert.year}</p>`;
+      certSec.appendChild(div);
+    });
+
+    // Achievements
+    const achSec = document.getElementById('achievementsSection');
+    (data.achievements || []).forEach(ach => {
+      const div = document.createElement('div');
+      div.className = 'achievement';
+      div.innerHTML = `<h3>${ach.title}</h3>
+        <p>${ach.description}</p>`;
+      achSec.appendChild(div);
+    });
+  </script>
+</body>
+</html>

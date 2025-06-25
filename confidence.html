@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Confidence Booster</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      padding: 20px;
+      background-color: #f7f9fc;
+      color: #333;
+    }
+    h1 {
+      text-align: center;
+      color: #007bff;
+    }
+    select {
+      display: block;
+      margin: 20px auto;
+      padding: 10px;
+      font-size: 16px;
+      width: 100%;
+      max-width: 400px;
+    }
+    .section {
+      display: none;
+      margin-top: 20px;
+      padding: 20px;
+      border-radius: 8px;
+      background-color: #fff;
+      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+    }
+    .visible {
+      display: block;
+    }
+    img {
+      max-width: 100%;
+      margin: 10px 0;
+      border-radius: 6px;
+    }
+    .back-btn {
+      display: block;
+      margin: 40px auto 0;
+      padding: 10px 20px;
+      background-color: #007bff;
+      color: white;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 16px;
+    }
+    .back-btn:hover {
+      background-color: #0056b3;
+    }
+  </style>
+</head>
+<body>
+  <h1>Confidence Booster 💪</h1>
+  <select id="sectionSelect">
+    <option value="">Select a Booster Option</option>
+    <option value="fortune">Portfolio Fortune</option>
+    <option value="motivation">Motivation</option>
+    <option value="recruiter">Recruiter's Impressions</option>
+    <option value="struggles">Developer Struggles</option>
+    <option value="compliments">Bonus – Compliment Generator</option>
+  </select>
+
+  <div id="fortune" class="section">
+    <h2>🔮 Portfolio Fortune</h2>
+    <p>Your portfolio is so clean, it could be a fresh Git commit with no bugs!</p>
+    <p>If design awards were given for portfolios, you'd be taking home an Oscar.</p>
+    <p>Your project list is longer than my debugging sessions. Impressive!</p>
+    <p>Every line of your portfolio screams, "Hire me, I'm the best!"</p>
+<p>Your portfolio is so stunning, even aliens want to hire you!</p>
+    <p>This isn’t a portfolio, it’s a masterpiece in disguise.</p>
+    <p>Recruiters will need sunglasses because your portfolio shines so bright!</p>
+    <p>Your code is so clean, it might pass a white-glove test.</p>
+  </div>
+
+  <div id="motivation" class="section">
+    <h2>🚀 Motivation</h2>
+    <p>You code better than your coffee machine brews!</p>
+    <p>If portfolios were superpowers, yours would be invincible!</p>
+    <p>Get ready! You're pushing yourself to greatness!</p>
+    <p>You're the semicolon to my line of code – essential and perfect!</p>
+<p>Your keyboard should be in a museum – it has produced brilliance!</p>
+  </div>
+
+  <div id="recruiter" class="section">
+    <h2>💼 Recruiter's Impressions</h2>
+    <p>Hello, I'm a recruiter from Google. Your portfolio is 🔥. When can you start?</p>
+    <p>Amazon called – they want your portfolio style for Alexa’s next update!</p>
+    <p>Your projects show more creativity than half the team I hired last year.</p>
+    <p>If I could bookmark one portfolio forever, it’d be yours.</p>
+ <p>"Hi, I’m a recruiter from DreamTech Inc. We were blown away by your portfolio. When can you start?"</p>
+    <p>"This is the best portfolio I've reviewed in years. Absolutely brilliant!"</p>
+    <p>"Honestly, are you sure you’re not already a senior dev? This is top-tier work!"</p>
+  </div>
+
+  <div id="struggles" class="section">
+    <h2>😂 Developer Struggles</h2>
+    <p>Because even pros get stuck in semicolon limbo!</p>
+    <img src="https://miro.medium.com/v2/resize:fit:640/format:webp/1*uKX_NI_q7ZAmnuCGCkyDqQ.jpeg" alt="When you fix a bug by accident">
+    <img src="https://miro.medium.com/v2/resize:fit:640/format:webp/1*dyEpn-HTPUS1KFWgvng8cw.png" alt="It worked yesterday meme">
+    <img src="https://miro.medium.com/v2/resize:fit:720/format:webp/1*hxVSpiIgZSmqHZhXdGcUQg.png" alt="No idea why it works but it does">
+    <img src="https://miro.medium.com/v2/resize:fit:640/format:webp/1*ieVIjf8GDBwJ8wacsnHWDQ.jpeg" alt="Me vs Me debugging">
+    <img src="https://miro.medium.com/v2/resize:fit:720/format:webp/1*WI9PQS56U-5LKf-h4fmprg.jpeg" alt="We’re laughing with you, not at you">
+    <img src="https://miro.medium.com/v2/resize:fit:720/format:webp/1*zkHzH-L-4AMe6x7-oXmNgg.png" alt="When going over to the dark side is required">
+  </div>
+
+  <div id="compliments" class="section">
+    <h2>✨ Bonus – Compliment Generator</h2>
+    <p id="complimentText">Click the button to get a compliment!</p>
+    <button onclick="generateCompliment()">Get Compliment</button>
+  </div>
+
+  <button class="back-btn" onclick="window.location.href='portfolio-form.html'">⬅ Back to Portfolio</button>
+
+  <script>
+    const sectionSelect = document.getElementById("sectionSelect");
+    const sections = document.querySelectorAll(".section");
+
+    sectionSelect.addEventListener("change", () => {
+      sections.forEach(s => s.classList.remove("visible"));
+      const selected = sectionSelect.value;
+      if (selected) {
+        document.getElementById(selected).classList.add("visible");
+      }
+    });
+
+    const compliments = [
+      "You're not just coding, you're crafting magic ✨",
+      "Your portfolio could motivate Stack Overflow!",
+      "You debug with grace. Teach me senpai!",
+      "You write cleaner code than VS Code's formatter!",
+      "If confidence were code, you'd be production-ready!",
+      "You write code like Mozart wrote music.",
+      "Even your bugs are elegant!",
+      "Your logic is sharper than a binary blade.",
+      "StackOverflow wants to hire you as their answer bot.",
+      "If coding were a game, you'd already be a legend."
+    ];
+
+    function generateCompliment() {
+      const random = compliments[Math.floor(Math.random() * compliments.length)];
+      document.getElementById("complimentText").innerText = random;
+    }
+  </script>
+</body>
+</html>

@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Portfolio Template 4 - Creative Grid</title>
+  <style>
+    body {
+      font-family: 'Poppins', sans-serif;
+      margin: 0;
+      padding: 30px;
+      background: #fafafa;
+      color: #222;
+    }
+    header {
+      text-align: center;
+      margin-bottom: 50px;
+    }
+    header h1 {
+      font-weight: 700;
+      font-size: 3.2rem;
+      margin-bottom: 0.2em;
+    }
+    header p {
+      font-style: italic;
+      color: #666;
+    }
+    .grid-container {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+      gap: 25px;
+      max-width: 1100px;
+      margin: 0 auto;
+    }
+    .card {
+      background: #fff;
+      padding: 25px;
+      border-radius: 14px;
+      box-shadow: 0 6px 18px rgba(0, 0, 0, 0.1);
+      transition: transform 0.2s ease;
+    }
+    .card:hover {
+      transform: translateY(-8px);
+    }
+    .card h3 {
+      margin-top: 0;
+      margin-bottom: 12px;
+      color: #007bff;
+    }
+    .card p {
+      color: #555;
+      margin: 6px 0;
+    }
+    footer {
+      text-align: center;
+      margin-top: 60px;
+      font-size: 0.9em;
+      color: #999;
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <h1 id="headerName">Maria Lopez</h1>
+    <p id="headerProfession">Graphic Designer & Illustrator</p>
+  </header>
+
+  <div class="grid-container">
+    <div class="card" id="personal">
+      <h3>Personal Info</h3>
+      <p><strong>Email:</strong> maria.lopez@example.com</p>
+      <p><strong>Phone:</strong> +1 555 123 4567</p>
+      <p><strong>DOB:</strong> April 5, 1995</p>
+      <p><strong>Address:</strong> 456 Sunset Blvd, LA, USA</p>
+      <p><strong>LinkedIn:</strong> linkedin.com/in/marialopez</p>
+      <p><strong>Portfolio:</strong> marialopez.design</p>
+    </div>
+
+    <div class="card" id="about">
+      <h3>About Me</h3>
+      <p>Creative artist with a passion for visual storytelling and brand identity design. I bring ideas to life through colors, shapes, and strategy.</p>
+    </div>
+
+    <div class="card" id="education">
+      <h3>Education</h3>
+      <p><strong>BFA – Graphic Design</strong></p>
+      <p>California Arts University</p>
+      <p>2013 – 2017</p>
+    </div>
+
+    <div class="card" id="skills">
+      <h3>Skills</h3>
+      <p>Adobe Photoshop, Illustrator, After Effects, Branding, Typography, Digital Illustration</p>
+    </div>
+
+    <div class="card" id="projects">
+      <h3>Projects</h3>
+      <p><strong>Brand Redesign:</strong> Complete visual identity overhaul for XYZ Corp.</p>
+      <p><strong>Logo Series:</strong> Designed logos for 15+ small businesses.</p>
+      <p><strong>Illustration:</strong> Illustrated a children’s book published by DreamLit.</p>
+      <p><strong>Portfolio:</strong> <a href="https://marialopez.design" target="_blank">marialopez.design</a></p>
+    </div>
+
+    <div class="card" id="certifications">
+      <h3>Certifications</h3>
+      <p><strong>Graphic Design Specialization</strong> – Coursera (2021)</p>
+      <p><strong>Motion Design Pro</strong> – Skillshare (2022)</p>
+    </div>
+
+    <div class="card" id="achievements">
+      <h3>Achievements</h3>
+      <p>Winner – Adobe Behance Design Awards 2023</p>
+      <p>Featured Artist – Creative Bloq Magazine, March 2024</p>
+    </div>
+
+    <div class="card" id="contact">
+      <h3>Contact</h3>
+      <p><strong>Alternate Email:</strong> maria.alt@example.com</p>
+      <p><strong>Message:</strong> Let’s create something beautiful together. Open to freelance collaborations and full-time roles.</p>
+      <p><strong>Behance:</strong> <a href="https://behance.net/marialopez" target="_blank">behance.net/marialopez</a></p>
+    </div>
+  </div>
+
+  <footer>
+    &copy; 2025 Maria Lopez
+  </footer>
+
+  <script>
+    document.addEventListener("DOMContentLoaded", () => {
+      const data = JSON.parse(localStorage.getItem("portfolioData"));
+      if (!data) return;
+
+      // Header
+      document.getElementById("headerName").textContent = data.fullName || "Your Name";
+      document.getElementById("headerProfession").textContent = data.profession || "Your Profession";
+
+      // Personal Info
+      document.getElementById("personal").innerHTML = `
+        <h3>Personal Info</h3>
+        <p><strong>Email:</strong> ${data.email}</p>
+        <p><strong>Phone:</strong> ${data.phone}</p>
+        <p><strong>DOB:</strong> ${data.dob}</p>
+        <p><strong>Address:</strong> ${data.address}</p>
+        <p><strong>LinkedIn:</strong> ${data.linkedin}</p>
+        <p><strong>GitHub:</strong> ${data.github}</p>
+        <p><strong>Portfolio:</strong> ${data.portfolioUrl}</p>
+      `;
+
+      // About
+      document.getElementById("about").innerHTML = `
+        <h3>About Me</h3>
+        <p>${data.about}</p>
+      `;
+
+      // Education
+      const eduHTML = data.education?.map(edu => `
+        <p><strong>${edu.degree}</strong></p>
+        <p>${edu.institution}</p>
+        <p>${edu.start} – ${edu.end}</p>
+      `).join("") || "";
+      document.getElementById("education").innerHTML = `<h3>Education</h3>${eduHTML}`;
+
+      // Skills
+      const skillsHTML = data.skills?.join(", ") || "";
+      document.getElementById("skills").innerHTML = `<h3>Skills</h3><p>${skillsHTML}</p>`;
+
+      // Projects
+      const projectsHTML = data.projects?.map(proj => `
+        <p><strong>${proj.title}:</strong> ${proj.desc}</p>
+        <p><strong>Tech Stack:</strong> ${proj.stack}</p>
+        <p><strong>GitHub:</strong> <a href="${proj.link}" target="_blank">${proj.link}</a></p>
+      `).join("") || "";
+      document.getElementById("projects").innerHTML = `<h3>Projects</h3>${projectsHTML}`;
+
+      // Certifications
+      const certsHTML = data.certifications?.map(cert => `
+        <p><strong>${cert.name}</strong> – ${cert.org} (${cert.year})</p>
+      `).join("") || "";
+      document.getElementById("certifications").innerHTML = `<h3>Certifications</h3>${certsHTML}`;
+
+      // Achievements
+      const achievementsHTML = data.achievements?.map(ach => `
+        <p><strong>${ach.title}:</strong> ${ach.description}</p>
+      `).join("") || "";
+      document.getElementById("achievements").innerHTML = `<h3>Achievements</h3>${achievementsHTML}`;
+
+      // Contact
+      document.getElementById("contact").innerHTML = `
+        <h3>Contact</h3>
+        <p><strong>Alternate Email:</strong> ${data.alternateEmail}</p>
+        <p><strong>Message:</strong> ${data.contactMessage}</p>
+      `;
+    });
+  </script>
+</body>
+</html>

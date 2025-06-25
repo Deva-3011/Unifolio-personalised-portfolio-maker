@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Unifolio - Your Portfolio, Simplified</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <nav>
+    <div class="logo">Unifolio</div>
+    <ul id="nav-links">
+      <li><a href="#">Home</a></li>
+      <li><a href="#how-it-works">How It Works</a></li>
+      <li><a href="#contact">Contact</a></li>
+      <li><a href="login.html" id="login-link">Login</a></li>
+      <li><a href="signup.html" id="signup-link">Signup</a></li>
+      <!-- Logout link will be inserted here dynamically if user is logged in -->
+    </ul>
+  </nav>
+
+  <section class="hero">
+    <h1>Unifolio</h1>
+    <p class="tagline">Your Portfolio, Simplified</p>
+    <p class="description">
+      Create a professional portfolio in minutes. Enter your details, pick a design, and showcase your skills and projects effortlessly.
+    </p>
+    <div class="btn-group" id="btn-group">
+      <a href="login.html" class="btn" id="btn-login">Login</a>
+      <a href="signup.html" class="btn" id="btn-signup">Signup</a>
+      <!-- Logout button will be inserted here dynamically if user is logged in -->
+    </div>
+  </section>
+
+  <section id="how-it-works" class="how-it-works">
+    <h2>How It Works</h2>
+    <div class="steps">
+      <div class="step">
+        <div class="step-icon">📝</div>
+        <h3>Step 1: Sign Up & Enter Details</h3>
+        <p>Create an account and fill out your personal, education, skills, and project information.</p>
+      </div>
+      <div class="step">
+        <div class="step-icon">🎨</div>
+        <h3>Step 2: Choose a Template</h3>
+        <p>Select from beautiful, professional portfolio designs tailored to your style.</p>
+      </div>
+      <div class="step">
+        <div class="step-icon">🚀</div>
+        <h3>Step 3: Preview & Download</h3>
+        <p>See your portfolio live, then download it as a PDF or share a link with employers.</p>
+      </div>
+    </div>
+  </section>
+
+  <footer id="contact">
+    <div class="socials">
+      <a href="#" title="Twitter" aria-label="Twitter">🐦</a>
+      <a href="#" title="LinkedIn" aria-label="LinkedIn">🔗</a>
+      <a href="#" title="GitHub" aria-label="GitHub">🐙</a>
+    </div>
+    <p>&copy; 2025 Unifolio. All rights reserved to Devendiran.</p>
+  </footer>
+
+  <!-- Firebase SDKs -->
+  <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-auth.js"></script>
+
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/9.6.10/firebase-app.js";
+    import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/9.6.10/firebase-auth.js";
+
+    const firebaseConfig = {
+      apiKey: "AIzaSyDPfS19D8W3FzD6VMjryjvkChUEDTvAnhA",
+      authDomain: "developer-intern.firebaseapp.com",
+      projectId: "developer-intern",
+      storageBucket: "developer-intern.appspot.com",
+      messagingSenderId: "1044594038470",
+      appId: "1:1044594038470:web:7e2692440f2776cee0e9c7"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+
+    // Elements
+    const navLinks = document.getElementById("nav-links");
+    const btnGroup = document.getElementById("btn-group");
+    const loginLink = document.getElementById("login-link");
+    const signupLink = document.getElementById("signup-link");
+    const btnLogin = document.getElementById("btn-login");
+    const btnSignup = document.getElementById("btn-signup");
+
+    onAuthStateChanged(auth, user => {
+      if (user) {
+        // User is signed in
+        // Remove login and signup links/buttons
+        if (loginLink) loginLink.style.display = "none";
+        if (signupLink) signupLink.style.display = "none";
+        if (btnLogin) btnLogin.style.display = "none";
+        if (btnSignup) btnSignup.style.display = "none";
+
+        // Add logout link to nav
+        if (!document.getElementById("logout-link")) {
+          const logoutLi = document.createElement("li");
+          logoutLi.innerHTML = `<a href="#" id="logout-link">Logout</a>`;
+          navLinks.appendChild(logoutLi);
+
+          // Add logout button to hero section
+          if (!document.getElementById("btn-logout")) {
+            const logoutBtn = document.createElement("a");
+            logoutBtn.href = "#";
+            logoutBtn.id = "btn-logout";
+            logoutBtn.className = "btn";
+            logoutBtn.textContent = "Logout";
+            btnGroup.appendChild(logoutBtn);
+
+            logoutBtn.addEventListener("click", (e) => {
+              e.preventDefault();
+              signOut(auth).then(() => {
+                alert("You have been logged out.");
+                window.location.href = "index.html";
+              }).catch((error) => {
+                alert("Error logging out: " + error.message);
+              });
+            });
+          }
+
+          // Add event listener to nav logout link
+          document.getElementById("logout-link").addEventListener("click", (e) => {
+            e.preventDefault();
+            signOut(auth).then(() => {
+              alert("You have been logged out.");
+              window.location.href = "index.html";
+            }).catch((error) => {
+              alert("Error logging out: " + error.message);
+            });
+          });
+        }
+
+      } else {
+        // No user signed in
+        // Show login and signup links/buttons
+        if (loginLink) loginLink.style.display = "inline";
+        if (signupLink) signupLink.style.display = "inline";
+        if (btnLogin) btnLogin.style.display = "inline-block";
+        if (btnSignup) btnSignup.style.display = "inline-block";
+
+        // Remove logout links/buttons if any
+        const logoutLink = document.getElementById("logout-link");
+        if (logoutLink) logoutLink.parentElement.remove();
+
+        const logoutBtn = document.getElementById("btn-logout");
+        if (logoutBtn) logoutBtn.remove();
+      }
+    });
+  </script>
+</body>
+</html>
