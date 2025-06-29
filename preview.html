@@ -48,7 +48,8 @@
     <h1>Preview Your Portfolio</h1>
     <iframe id="templateFrame"></iframe>
     <!-- Hidden printable container -->
-<div id="printArea" style="display:none;"></div>
+<div id="hiddenPreview" style="display: none;"></div>
+
 
     <div class="btns">
       <button class="download-btn" onclick="downloadPDF()">Generate Portfolio</button>
@@ -110,35 +111,18 @@
       }
     });
 //Improved preview and styling
-  function downloadPDF() {
+ function downloadPDF() {
   const iframe = document.getElementById("templateFrame");
-  const iframeDocument = iframe.contentDocument || iframe.contentWindow.document;
+  const iframeWin = iframe.contentWindow;
 
-  if (!iframeDocument || !iframeDocument.body) {
-    alert("Preview not ready. Please wait.");
+  if (!iframeWin) {
+    alert("Portfolio is still loading. Please wait.");
     return;
   }
-//<!-- Fixed preview layout -->
 
-  const contentClone = iframeDocument.body.cloneNode(true);
-
-  const printArea = document.getElementById("printArea");
-  printArea.innerHTML = "";
-  printArea.appendChild(contentClone);
-
-  printArea.style.display = "block"; // Show for capture
-
-  html2pdf().from(printArea).set({
-    margin: 0,
-    filename: "Unifolio-Portfolio.pdf",
-    html2canvas: { scale: 2, useCORS: true },
-    jsPDF: { unit: "in", format: "letter", orientation: "portrait" }
-  }).save().then(() => {
-    printArea.style.display = "none"; // Hide again after saving
-    window.location.href = "feedback.html"; // Go to feedback page
-  });
+  // Post a message to the iframe to generate the PDF from inside itself
+  iframeWin.postMessage({ action: "generatePDF" }, "*");
 }
-
   </script>
 </body>
 </html>

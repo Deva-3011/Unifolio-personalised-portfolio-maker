@@ -254,6 +254,20 @@
   });
   
 </script>
-
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+<script>
+  window.addEventListener("message", (event) => {
+    if (event.data.action === "generatePDF") {
+      html2pdf().from(document.body).set({
+        margin: 0.5,
+        filename: "Unifolio-Portfolio.pdf",
+        html2canvas: { scale: 2, useCORS: true },
+        jsPDF: { unit: 'in', format: 'letter', orientation: 'portrait' }
+      }).save().then(() => {
+        window.top.location.href = "feedback.html"; // Redirect after download
+      });
+    }
+  });
+</script>
 </body>
 </html>

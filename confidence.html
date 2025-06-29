@@ -53,6 +53,18 @@
     .back-btn:hover {
       background-color: #0056b3;
     }
+    .fade-in {
+  opacity: 0;
+  transform: translateY(20px);
+  animation: fadeInUp 1s forwards;
+}
+@keyframes fadeInUp {
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
   </style>
 </head>
 <body>
@@ -64,9 +76,12 @@
     <option value="recruiter">Recruiter's Impressions</option>
     <option value="struggles">Developer Struggles</option>
     <option value="compliments">Bonus – Compliment Generator</option>
+    <option value="advice">Get Random Advice</option>
+
   </select>
 
   <div id="fortune" class="section">
+    
     <h2>🔮 Portfolio Fortune</h2>
     <p>Your portfolio is so clean, it could be a fresh Git commit with no bugs!</p>
     <p>If design awards were given for portfolios, you'd be taking home an Oscar.</p>
@@ -114,6 +129,11 @@
     <p id="complimentText">Click the button to get a compliment!</p>
     <button onclick="generateCompliment()">Get Compliment</button>
   </div>
+<div id="advice" class="section">
+  <h2>🧠 Get Random Advice</h2>
+  <p id="adviceText">Click the button to get some advice!</p>
+  <button onclick="getAdvice()">Get Advice</button>
+</div>
 
   <button class="back-btn" onclick="window.location.href='portfolio-form.html'">⬅ Back to Portfolio</button>
 
@@ -146,6 +166,17 @@
       const random = compliments[Math.floor(Math.random() * compliments.length)];
       document.getElementById("complimentText").innerText = random;
     }
+    function getAdvice() {
+  fetch('https://api.adviceslip.com/advice')
+    .then(res => res.json())
+    .then(data => {
+      document.getElementById("adviceText").innerText = `"${data.slip.advice}"`;
+    })
+    .catch(err => {
+      document.getElementById("adviceText").innerText = "Oops! Couldn't fetch advice. Try again.";
+    });
+}
+
   </script>
 </body>
 </html>

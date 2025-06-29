@@ -1,18 +1,74 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Portfolio Template 15</title>
   <style>
-    body { font-family: Georgia, serif; background-color: #fcfcfc; margin: 0; }
-    .top { background: #1c1c1c; color: #f2f2f2; text-align: center; padding: 50px 10px; }
-    .container { max-width: 900px; margin: 40px auto; padding: 20px; background: #fff; border-radius: 10px; }
-    h2 { color: #444; margin-top: 40px; }
-    ul { padding-left: 20px; }
-    li { margin-bottom: 8px; }
-    .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
-    a { color: #1c1c1c; text-decoration: underline; }
+    body {
+      font-family: Georgia, serif;
+      background-color: #fcfcfc;
+      margin: 0;
+    }
+
+    .top {
+      background: #1c1c1c;
+      color: #f2f2f2;
+      text-align: center;
+      padding: 50px 10px;
+    }
+
+    .top a {
+      color: #0fd;
+      text-decoration: none;
+      transition: color 0.3s ease, transform 0.3s ease;
+    }
+
+    .top a:hover {
+      color: #0ff;
+      transform: scale(1.05);
+    }
+
+    .container {
+      max-width: 900px;
+      margin: 40px auto;
+      padding: 20px;
+      background: #fff;
+      border-radius: 10px;
+    }
+
+    h2 {
+      color: #444;
+      margin-top: 40px;
+    }
+
+    ul {
+      padding-left: 20px;
+    }
+
+    li {
+      margin-bottom: 8px;
+    }
+
+    .fade-in {
+      opacity: 0;
+      transform: translateY(30px);
+      animation: fadeInUp 0.8s ease forwards;
+    }
+
+    .fade-in:nth-child(1) { animation-delay: 0.1s; }
+    .fade-in:nth-child(2) { animation-delay: 0.2s; }
+    .fade-in:nth-child(3) { animation-delay: 0.3s; }
+    .fade-in:nth-child(4) { animation-delay: 0.4s; }
+    .fade-in:nth-child(5) { animation-delay: 0.5s; }
+    .fade-in:nth-child(6) { animation-delay: 0.6s; }
+
+    @keyframes fadeInUp {
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
   </style>
 </head>
 <body>
@@ -29,93 +85,104 @@
   </div>
 
   <div class="container">
-    <div id="about"></div>
-    <div id="education"></div>
-    <div id="skills"></div>
-    <div id="projects"></div>
-    <div id="certifications"></div>
-    <div id="achievements"></div>
-    <div id="contact"></div>
+    <div id="about" class="fade-in"></div>
+    <div id="education" class="fade-in"></div>
+    <div id="skills" class="fade-in"></div>
+    <div id="projects" class="fade-in"></div>
+    <div id="certifications" class="fade-in"></div>
+    <div id="achievements" class="fade-in"></div>
+    <div id="contact" class="fade-in"></div>
   </div>
 
   <script>
-  document.addEventListener("DOMContentLoaded", () => {
-    const data = JSON.parse(localStorage.getItem("portfolioData"));
-    if (!data) return;
+    document.addEventListener("DOMContentLoaded", () => {
+      const data = JSON.parse(localStorage.getItem("portfolioData"));
+      if (!data) return;
 
-    // Header Info
-    document.getElementById("name").textContent = data.fullName || "Your Name";
-    document.getElementById("profession").textContent = data.profession || "Your Profession";
-    document.getElementById("contact-line-1").textContent = `Email: ${data.email} | Phone: ${data.phone}`;
-    document.getElementById("contact-line-2").textContent = `DOB: ${data.dob} | Address: ${data.address}`;
-    document.getElementById("links").innerHTML = `
-      <a href="${data.linkedin}" target="_blank">LinkedIn</a> |
-      <a href="${data.github}" target="_blank">GitHub</a> |
-      <a href="${data.portfolioUrl}" target="_blank">Portfolio</a>
-    `;
+      document.getElementById("name").textContent = data.fullName || "Your Name";
+      document.getElementById("profession").textContent = data.profession || "Your Profession";
+      document.getElementById("contact-line-1").textContent = `Email: ${data.email} | Phone: ${data.phone}`;
+      document.getElementById("contact-line-2").textContent = `DOB: ${data.dob} | Address: ${data.address}`;
+      document.getElementById("links").innerHTML = `
+        <a href="${data.linkedin}" target="_blank">LinkedIn</a> |
+        <a href="${data.github}" target="_blank">GitHub</a> |
+        <a href="${data.portfolioUrl}" target="_blank">Portfolio</a>
+      `;
 
-    // About
-    document.getElementById("about").innerHTML = `
-      <h2>About Me</h2>
-      <p>${data.about}</p>
-    `;
+      document.getElementById("about").innerHTML = `
+        <h2>About Me</h2>
+        <p>${data.about}</p>
+      `;
 
-    // Education
-    const eduHTML = data.education?.map(edu => `
-      <li><strong>${edu.degree}</strong>, ${edu.institution} (${edu.start} – ${edu.end})</li>
-    `).join("") || "";
-    document.getElementById("education").innerHTML = `
-      <h2>Education</h2>
-      <ul>${eduHTML}</ul>
-    `;
+      const eduHTML = data.education?.map(edu => `
+        <li><strong>${edu.degree}</strong>, ${edu.institution} (${edu.start} – ${edu.end})</li>
+      `).join("") || "";
+      document.getElementById("education").innerHTML = `
+        <h2>Education</h2>
+        <ul>${eduHTML}</ul>
+      `;
 
-    // Skills
-    const skillsHTML = data.skills?.map(skill => `<li>${skill}</li>`).join("") || "";
-    document.getElementById("skills").innerHTML = `
-      <h2>Skills</h2>
-      <ul>${skillsHTML}</ul>
-    `;
+      const skillsHTML = data.skills?.map(skill => `<li>${skill}</li>`).join("") || "";
+      document.getElementById("skills").innerHTML = `
+        <h2>Skills</h2>
+        <ul>${skillsHTML}</ul>
+      `;
 
-    // Projects
-    const projectsHTML = data.projects?.map(proj => `
-      <li>
-        <strong>${proj.title}</strong><br/>
-        ${proj.desc}<br/>
-        <em>Tech Stack:</em> ${proj.stack}<br/>
-        <a href="${proj.link}" target="_blank">GitHub</a> 
-        ${proj.demo ? `| <a href="${proj.link}" target="_blank">Live Demo</a>` : ""}
-      </li>
-    `).join("") || "";
-    document.getElementById("projects").innerHTML = `
-      <h2>Projects</h2>
-      <ul>${projectsHTML}</ul>
-    `;
+      const projectsHTML = data.projects?.map(proj => `
+        <li>
+          <strong>${proj.title}</strong><br/>
+          ${proj.desc}<br/>
+          <em>Tech Stack:</em> ${proj.stack}<br/>
+          <a href="${proj.link}" target="_blank">GitHub</a>
+          ${proj.demo ? `| <a href="${proj.demo}" target="_blank">Live Demo</a>` : ""}
+        </li>
+      `).join("") || "";
+      document.getElementById("projects").innerHTML = `
+        <h2>Projects</h2>
+        <ul>${projectsHTML}</ul>
+      `;
 
-    // Certifications
-    const certsHTML = data.certifications?.map(cert => `
-      <li>${cert.name} – ${cert.org} (${cert.year})</li>
-    `).join("") || "";
-    document.getElementById("certifications").innerHTML = `
-      <h2>Certifications</h2>
-      <ul>${certsHTML}</ul>
-    `;
+      const certsHTML = data.certifications?.map(cert => `
+        <li>${cert.name} – ${cert.org} (${cert.year})</li>
+      `).join("") || "";
+      document.getElementById("certifications").innerHTML = `
+        <h2>Certifications</h2>
+        <ul>${certsHTML}</ul>
+      `;
 
-    // Achievements
-    const achievementsHTML = data.achievements?.map(ach => `
-      <li><strong>${ach.title}</strong> – ${ach.description}</li>
-    `).join("") || "";
-    document.getElementById("achievements").innerHTML = `
-      <h2>Achievements</h2>
-      <ul>${achievementsHTML}</ul>
-    `;
+      const achievementsHTML = data.achievements?.map(ach => `
+        <li><strong>${ach.title}</strong> – ${ach.description}</li>
+      `).join("") || "";
+      document.getElementById("achievements").innerHTML = `
+        <h2>Achievements</h2>
+        <ul>${achievementsHTML}</ul>
+      `;
 
-    // Contact
-    document.getElementById("contact").innerHTML = `
-      <h2>Contact</h2>
-      <p><strong>Alternate Email:</strong> ${data.alternateEmail}</p>
-      <p><strong>Message:</strong> ${data.contactMessage}</p>
-    `;
-  });
+      document.getElementById("contact").innerHTML = `
+        <h2>Contact</h2>
+        <p><strong>Alternate Email:</strong> ${data.alternateEmail}</p>
+        <p><strong>Message:</strong> ${data.contactMessage}</p>
+      `;
+    });
   </script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+<script>
+  window.addEventListener("message", (event) => {
+    if (event.data.action === "generatePDF") {
+      // Wait for a moment to let all DOM and styles render fully
+      setTimeout(() => {
+        html2pdf().from(document.body).set({
+          margin: 0.5,
+          filename: "Unifolio-Portfolio.pdf",
+          html2canvas: { scale: 2, useCORS: true },
+          jsPDF: { unit: 'in', format: 'letter', orientation: 'portrait' }
+        }).save().then(() => {
+          window.top.location.href = "feedback.html";
+        });
+      }, 800); // 0.5 second delay — can increase to 800 if needed
+    }
+  });
+</script>
+
 </body>
 </html>
